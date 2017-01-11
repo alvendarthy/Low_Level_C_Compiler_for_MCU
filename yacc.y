@@ -28,7 +28,6 @@ finally : codes
 
 codes	: codes indep_codes
 	| codes block
-	| codes asm_block
 	| {}
 	;
 
@@ -39,13 +38,22 @@ indep_codes : indep_codes single_code
 single_code : defination_code
 	;
 
-defination_code : INT8 IDENTIFIER ';' 
-	{
-		cout << "new var: " << $2  << endl;
-	}
+defination_code : INT8 identifiers ';' 
 	;
 
-block : '{' codes '}' 
+identifiers : identifiers ',' IDENTIFIER
+	{
+		cout << "new var: " << $3  << endl;
+	}
+	| IDENTIFIER
+	{
+		cout << "new var: " << $1  << endl;
+	}
+
+block : normal_block
+	| asm_block
+
+normal_block : '{' codes '}' 
 	{
 		cout << "new block" << endl;
 	}
