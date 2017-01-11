@@ -36,16 +36,20 @@ indep_codes : indep_codes single_code
 	| {}
 	;
 
-if_statement: IF '(' ')' if_block
-	| IF '(' ')' if_block ELSE if_block
+if_statement: IF '(' ')' logical_block
+	| IF '(' ')' logical_block ELSE logical_block
 	;
 
-if_block: block
+while_statement: WHILE '(' ')' logical_block
+	| DO logical_block WHILE '(' ')'
+
+logical_block: block
 	| single_code
 	;
 
 single_code : defination_code
 	| if_statement
+	| while_statement
 	;
 
 defination_code : INT8 identifiers ';' 
