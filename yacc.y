@@ -36,7 +36,16 @@ indep_codes : indep_codes single_code
 	| {}
 	;
 
+if_statement: IF '(' ')' if_block
+	| IF '(' ')' if_block ELSE if_block
+	;
+
+if_block: block
+	| single_code
+	;
+
 single_code : defination_code
+	| if_statement
 	;
 
 defination_code : INT8 identifiers ';' 
@@ -62,11 +71,15 @@ function_block : AT_FUN IDENTIFIER '(' ')' block
 	}
 	;
 
-normal_block : '{' codes '}' 
+normal_block : '{' codes_in_block '}' 
 	{
 		cout << "new block" << endl;
 	}
 	;
+
+codes_in_block   : codes_in_block indep_codes
+        | codes_in_block block
+	| {}
 
 asm_block: AT_ASM '{' asm_codes '}'
 	;
