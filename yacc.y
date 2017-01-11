@@ -28,6 +28,7 @@ finally : codes
 
 codes	: codes indep_codes
 	| codes block
+	| codes function_block
 	| {}
 	;
 
@@ -49,9 +50,17 @@ identifiers : identifiers ',' IDENTIFIER
 	{
 		cout << "new var: " << $1  << endl;
 	}
+	;
 
 block : normal_block
 	| asm_block
+	;
+
+function_block : AT_FUN IDENTIFIER '(' ')' block
+	{
+		cout << "new function " << $2 << endl;
+	}
+	;
 
 normal_block : '{' codes '}' 
 	{
