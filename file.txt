@@ -6,12 +6,9 @@ int8 a;
 	int8 c;
 }
 
-@asm
-{
-	this is asm code; 
-	this is asm code; 
-	this is asm code; 
-	this is asm code; 
-	this is asm code; 
-	this is asm code; 
-}
+/*
+@asm {
+this is a test;
+this is b test;
+this is c test;
+}*/

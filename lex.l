@@ -54,9 +54,9 @@ blank_chars	([ \f\r\t\v])
 		BEGIN ASM;
 		return '{';
 	}
-<ASM_READY>\n {}
+<ASM_READY>[ \f\r\t\v\n] {}
 
-<ASM>^[^}\n]* {
+<ASM>[^}\n]* {
 		yylval.name = yytext;
                 return ASM_CODE;
         }
@@ -226,6 +226,7 @@ blank_chars	([ \f\r\t\v])
 			BEGIN MULTY_COMMENT;
 		}
 <MULTY_COMMENT>. {}
+<MULTY_COMMENT>\n {}
 <MULTY_COMMENT>"*/"	{
 			BEGIN INITIAL;
 		}
