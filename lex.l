@@ -122,12 +122,15 @@ blank_chars	([ \f\r\t\v])
 		return RSHL;
 	}
 
-"++" {
-		return INCR;
+(\+\+)|(\-\-) {
+		yylval.str=yytext;
+		return SELF_CALC;
 	}
 
-"--" {
-		return DECR;
+
+(\+)|(\-)|(\*)|(\\) {
+		yylval.str=yytext;
+                return CALC_CHAR;
 	}
 
 (>)|(>=)|(<)|(<=)|(==)|(!=)	{

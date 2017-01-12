@@ -16,19 +16,19 @@ int yydebug=1;
 %token IF ELSE ELSIF DO WHILE BREAK CONTINUE GOTO RETURN
 %token AND OR GT LT GE LE EQ NE
 %token<str> CMP
-%token<str> LOGICAL_CHAR
-%token SHL RSHL SHR RSHR INCR DECR
+%token<str> LOGICAL_CHAR CALC_CHAR SELF_CALC
+%token SHL RSHL SHR RSHR
 %token<integer>INTEGER
 %token<str>IDENTIFIER
 %token<str> ASM_CODE
 %token AT_RAM  AT_CODE  AT_FUN AT_END AT_ASM
 %token INT8
 %type<str_list> codes indep_codes block function_block single_code
-%type<str_list> if_statement partener_block 
+%type<str_list> if_statement partener_block
 %type<str_list> while_statement defination_code identifiers 
 %type<str_list> normal_block asm_block codes_in_block
-%type<str_list> asm_codes
-%type<str> logical_exps logical_exp
+%type<str_list> asm_codes math_op jump_statement addr_set
+%type<str> logical_exps logical_exp self_calc calc_statement
 
 %%
 
@@ -169,6 +169,11 @@ logical_exp : IDENTIFIER CMP IDENTIFIER
         {       
                 $$ = int2string($1) +$2 + $3;
         }
+	| INTEGER
+	{
+		$$ = int2string($1);
+	}
+	;
 
 partener_block: block
 	{
@@ -185,6 +190,10 @@ single_code : defination_code
 		$$ = $1;
 
 	}
+	| math_op
+	{
+		$$ = $1;
+	}
 	| if_statement
 	{
 		$$ = $1;
@@ -192,6 +201,81 @@ single_code : defination_code
 	| while_statement
 	{
 		$$ = $1;
+	}
+	| jump_statement
+	{
+		$$ = $1;
+	}
+	| addr_set
+	{
+		$$ = $1;
+	}
+
+addr_set : AT_CODE INTEGER
+	{
+		string code = "";
+		string addr = int2string($2);
+                PUSH_BACK($$,M_CODE_AT(addr),code);
+	}
+	| AT_RAM INTEGER
+	{
+		string code = "";
+		string addr = int2string($2);
+                PUSH_BACK($$,M_RAM_AT(addr),code);
+	}
+	;
+
+jump_statement: BREAK ';'
+        {
+		string code = "";
+                PUSH_BACK($$,M_BREAK(),code);
+        }
+        | CONTINUE ';'
+        {
+		string code = "";
+                PUSH_BACK($$,M_CONTINUE(),code);
+        }
+	| GOTO IDENTIFIER ';'
+	{
+		string code = "";
+                PUSH_BACK($$,M_GOTO($2),code);
+	}
+	| IDENTIFIER ':'
+	{
+		string code = "";
+                PUSH_BACK($$,M_LABEL($1),code);
+	}
+	;
+
+math_op: calc_statement
+	{
+		string code = "";
+                PUSH_BACK($$,M_MATH($1),code);
+	}
+	| self_calc
+	{
+		string code = "";
+                PUSH_BACK($$,M_MATH($1),code);
+	}
+	;
+
+calc_statement : IDENTIFIER '=' IDENTIFIER CALC_CHAR IDENTIFIER ';'
+        {
+                $$ = $1 + "=" + $3 + $4 + $5;
+        }
+        | IDENTIFIER '=' IDENTIFIER CALC_CHAR INTEGER ';'
+        {
+                $$ = $1 + "=" + $3 + $4 + int2string($5);
+        }
+        | INTEGER '=' IDENTIFIER CALC_CHAR IDENTIFIER  ';'
+        {
+                $$ = int2string($1) + "=" + $3 + $4 + $5;
+        }
+	;
+
+self_calc : IDENTIFIER SELF_CALC ';'
+	{
+		$$ = $1 + $2;
 	}
 	;
 
