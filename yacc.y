@@ -41,7 +41,7 @@ if_statement: IF '(' ')' logical_block
 	;
 
 while_statement: WHILE '(' ')' logical_block
-	| DO logical_block WHILE '(' ')'
+	| DO logical_block WHILE '(' ')' ';'
 
 logical_block: block
 	| single_code
@@ -81,7 +81,7 @@ normal_block : '{' codes_in_block '}'
 	}
 	;
 
-codes_in_block   : codes_in_block indep_codes
+codes_in_block   : codes_in_block single_code
         | codes_in_block block
 	| {}
 
