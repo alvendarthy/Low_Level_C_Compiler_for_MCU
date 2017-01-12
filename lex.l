@@ -57,7 +57,7 @@ blank_chars	([ \f\r\t\v])
 <ASM_READY>[ \f\r\t\v\n] {}
 
 <ASM>[^}\n]* {
-		yylval.name = yytext;
+		yylval.str = yytext;
                 return ASM_CODE;
         }
 <ASM>\n {}
@@ -75,10 +75,6 @@ blank_chars	([ \f\r\t\v])
                 return INT8;
         }
 
-"bit" {
-                return BIT;
-        }
-
 "if"    {
                 return IF;
         }
@@ -89,21 +85,6 @@ blank_chars	([ \f\r\t\v])
 "elsif" {
 		return ELSIF;
 	}
-
-"switch" {
-                printf("SWITCH statement.\n");
-                //return SWITCH;
-         }
-
-"case" {
-                printf("CASE statement.\n");
-                //return CASE;
-        }
-
-"default" {
-                printf("DEFAULT statement.\n");
-                //return DEFAULT;
-        }
 
 "while" {
                 return WHILE;
@@ -149,55 +130,33 @@ blank_chars	([ \f\r\t\v])
 		return DECR;
 	}
 
-">"	{
-		return GT;
+(>)|(>=)|(<)|(<=)|(==)|(!=)	{
+		yylval.str=yytext;
+                return CMP;
 	}
 
-">="	{
-		return GE;
-	}
-
-"<"	{
-		return LT;
-	}
-
-"<="	{
-		return LE;
-	}
-
-"=="	{
-		return EC;
-	}
-
-"!="	{
-		return NE;
-	}
-
-"&&"	{
-		return AND;
-	}
-
-"||"	{
-		return OR;
+(&&)|(\|\|)	{
+		yylval.str=yytext;
+		return LOGICAL_CHAR;
 	}
 
 {identifier}	{
-			yylval.name=yytext;
+			yylval.str=yytext;
 			return IDENTIFIER;
 		}
 
 {integer}	{
-			yylval.value=atoi(yytext);
+			yylval.integer=atoi(yytext);
 			return INTEGER;
 		}
 
 {bin}		{
-			yylval.value=bin2int(yytext, strlen(yytext));
+			yylval.integer=bin2int(yytext, strlen(yytext));
                         return INTEGER;
 		}
 
 {hex}		{
-			yylval.value=hex2int(yytext, strlen(yytext));
+			yylval.integer=hex2int(yytext, strlen(yytext));
                         return INTEGER;
 		}
 

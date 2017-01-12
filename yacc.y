@@ -15,6 +15,8 @@ int yydebug=1;
 %}
 %token IF ELSE ELSIF DO WHILE BREAK CONTINUE GOTO RETURN
 %token AND OR GT LT GE LE EQ NE
+%token<str> CMP
+%token<str> LOGICAL_CHAR
 %token SHL RSHL SHR RSHR INCR DECR
 %token<integer>INTEGER
 %token<str>IDENTIFIER
@@ -26,7 +28,6 @@ int yydebug=1;
 %type<str_list> while_statement defination_code identifiers 
 %type<str_list> normal_block asm_block codes_in_block
 %type<str_list> asm_codes
-%type<str> exp_eq exp_ne exp_gt exp_ge exp_lt exp_le
 %type<str> logical_exps logical_exp
 
 %%
@@ -150,115 +151,23 @@ logical_exps: logical_exp
 	{
 		$$ = $1;
 	}
-	| logical_exps AND logical_exp
+	| logical_exps LOGICAL_CHAR logical_exp
 	{
-		$$ = $1 + S_AND + $3;
-	}
-	| logical_exps OR  logical_exp
-	{
-		$$ = $1 + S_OR + $3;
+		$$ = $1 + $2 + $3;
 	}
 	;
 
-logical_exp : exp_eq
-	{
-		$$ = $1;
-	}
-	| exp_ne
-	{
-		$$ = $1;
-	}
-	| exp_gt
-	{
-		$$ = $1;
-	}
-	| exp_ge
-	{
-		$$ = $1;
-	}
-	| exp_lt
-	{
-		$$ = $1;
-	}
-	| exp_le
-	{
-		$$ = $1;
-	}
-	;
-
-
-exp_eq : IDENTIFIER EQ IDENTIFIER 
-        {
-		$$ = $1 + S_EQ + $3;
+logical_exp : IDENTIFIER CMP IDENTIFIER 
+        {       
+                $$ = $1 + $2 + $3;
         }
-        | IDENTIFIER EQ INTEGER
-        {
-		$$ = $1 + S_EQ + int2string($3);
+        | IDENTIFIER CMP INTEGER
+        {       
+                $$ = $1 + $2 + int2string($3);
         }
-        | INTEGER EQ IDENTIFIER 
-        {
-		$$ = int2string($1) + S_EQ + $3;
-        }
-
-exp_ne : IDENTIFIER NE IDENTIFIER 
-        {
-		$$ = $1 + S_NE + $3;
-        }
-        | IDENTIFIER NE INTEGER
-        {
-		$$ = $1 + S_NE + int2string($3);
-        }
-        | INTEGER NE IDENTIFIER 
-        {
-		$$ = int2string($1) + S_NE + $3;
-        }
-exp_gt : IDENTIFIER GT IDENTIFIER 
-        {
-		$$ = $1 + S_GT + $3;
-        }
-        | IDENTIFIER GT INTEGER
-        {
-		$$ = $1 + S_GT + int2string($3);
-        }
-        | INTEGER GT IDENTIFIER 
-        {
-		$$ = int2string($1) + S_GT + $3;
-        }
-exp_ge : IDENTIFIER GE IDENTIFIER 
-        {
-		$$ = $1 + S_GE + $3;
-        }
-        | IDENTIFIER GE INTEGER
-        {
-		$$ = $1 + S_GE + int2string($3);
-        }
-        | INTEGER GE IDENTIFIER 
-        {
-		$$ = ($1) + S_GE + $3;
-        }
-exp_lt : IDENTIFIER LT IDENTIFIER 
-        {
-		$$ = $1 + S_LT + $3;
-        }
-        | IDENTIFIER LT INTEGER
-        {
-		$$ = $1 + S_LT + int2string($3);
-        }
-        | INTEGER LT IDENTIFIER 
-        {
-		$$ = int2string($1) + S_LT + $3;
-        }
-exp_le : IDENTIFIER LE IDENTIFIER 
-        {
-		$$ = $1 + S_LE + $3;
-        }
-        | IDENTIFIER LE INTEGER
-        {
-		$$ = $1 + S_LE + int2string($3);
-        }
-        | INTEGER LE IDENTIFIER 
-        {
-		$$ = int2string($1) + S_LE + $3;
+        | INTEGER CMP IDENTIFIER 
+        {       
+                $$ = int2string($1) +$2 + $3;
         }
 
 partener_block: block
