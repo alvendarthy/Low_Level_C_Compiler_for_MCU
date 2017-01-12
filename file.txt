@@ -1,14 +1,37 @@
+START:
+goto START;
 
-int8 a;
+@ram 0xF
+int8 a, b, c, d;
 
-{
-	int8 b;
-	int8 c;
+@code 0b11
+while(1){
+	a = b -1;
+	if(a > 0)
+	{
+		a ++;
+		break;
+	}
 }
 
-/*
-@asm {
-this is a test;
-this is b test;
-this is c test;
-}*/
+
+
+a = a + 2;
+a = b +c ;
+b = a - c;
+c = a * b;
+s = w \ b;
+s ++;
+s --;
+
+while(a == 1){
+	int8 a,b,c;
+}
+
+do {
+	int8 a,b,c;
+}while(a ==1 && a < c || c ==  1);
+@function afunc() @asm{
+	asm code1;
+	asm code2;
+}
