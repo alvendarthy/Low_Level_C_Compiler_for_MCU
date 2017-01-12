@@ -6,109 +6,61 @@
 #include <stdio.h>
 #include <list>
 
+#define PUSH_BACK(targ,src,tmp) \
+	tmp = (src); \
+	(targ).push_back(tmp)
+
+#define PUSH_BACK_LIST(tar,src)\
+	(tar).insert((tar).end(),(src).begin(),(src).end())
+
+#define S_INT8	  "int8"
+#define S_NEW_VAR "mcu.new_var"
+
+
+#define S_LABEL_BGN(id) (S_LABEL_HEAD + (id) + "_BGN")
+#define S_LABEL_END(id) (S_LABEL_HEAD + (id) + "_END")
+#define S_LABEL_TRUE_BGN(id) (S_LABEL_HEAD + (id) + "_TRUE_BGN")
+#define M_GOTO(lab) "mcu.goto(\"" + lab + "\")"
+#define M_BREAK() "mcu.break()"
+#define M_CONTINUE() "mcu.continue()"
+#define M_LABEL(lab) "mcu.label(\"" + lab + "\")"
+#define M_CODE_AT(addr) "mcu.code_at(\"" + addr + "\")"
+#define M_RAM_AT(addr) "mcu.ram_at(\"" + addr + "\")"
+
+
+#define S_LABEL_HEAD "LABEL_"
+#define M_LABEL_BGN(id) "mcu.label(\"" S_LABEL_HEAD + (id) + "_BGN\")"
+#define M_LABEL_END(id) "mcu.label(\"" S_LABEL_HEAD + (id) + "_END\")"
+#define M_LABEL_LOGICAL_BGN(id) "mcu.label(\"" S_LABEL_HEAD + (id) + "_LOGICAL_BGN\")"
+#define M_LABEL_LOGICAL_END(id) "mcu.label(\"" S_LABEL_HEAD + (id) + "_LOGICAL_END\")"
+#define M_LABEL_TRUE_BGN(id) "mcu.label(\"" S_LABEL_HEAD + (id) + "_TRUE_BGN\")"
+#define M_LABEL_TRUE_END(id) "mcu.label(\"" S_LABEL_HEAD + (id) + "_TRUE_END\")"
+#define M_LABEL_FALSE_BGN(id) "mcu.label(\"" S_LABEL_HEAD + (id) + "_FALSE_BGN\")"
+#define M_LABEL_FALSE_END(id) "mcu.label(\"" S_LABEL_HEAD + (id) + "_FALSE_END\")"
+
+#define M_LOGICAL_EXP(exp) "mcu.logical(\"" + (exp) + "\")"
+
+#define S_NEW_FUNC_BGN "mcu.func_bgn"
+#define S_NEW_FUNC_END "mcu.func_end"
+#define M_NEW_INT8(name) (S_NEW_VAR "(\"" S_INT8 "\",\"" + (name) + "\")")
+#define M_NEW_FUNC_BGN(name) (S_NEW_FUNC_BGN "(\"" + (name) + "\")")
+#define M_NEW_FUNC_END(name) (S_NEW_FUNC_END "(\"" + (name) + "\")")
+
+#define S_MATH "mcu.math"
+#define M_MATH(line) (S_MATH "(\"" + line + "\")")
+
 using namespace std;
 
-enum E_code_type{
-	cRAM_AT,
-	cCODE_AT,
-	cREAL_CODE,
-	cBIT,
-	cINT8,
-	cNAME,
-	cCMD,
-	cASN,
-	cMULT,
-	cDEV,
-	cADD,
-	cSUB,
-	cBIT_AND,
-	cBIT_OR,
-	cBIT_XOR,
-	cBIT_NOT,
-	cDEF,
-	cCMP,
-	cEC,
-	cNE,
-	cGT,
-	cGE,
-	cLT,
-	cLE,
-	cLOGIC,
-	cAND,
-	cOR,
-	cSHL,
-	cRSHL,
-	cSHR,
-	cRSHR,
-	cINCR,
-	cDECR,
-	cIF_LOGIC_START,
-	cIF_TRUE_ACT,
-	cELSE,
-	cELSIF,
-	cELSIF_LOGIC_START,
-	cIF_FAULSE_ACT,
-	cIF_END,
-	cBREAK,
-	cCONTINUE,
-	cGOTO,
-	cRETURN,
-	cLABEL,
-	cWHILE_LOGIC_START,
-	cWHILE_ACT,
-	cWHILE_END,
-	cFUN_START,
-	cFUN_END,
-	cASM_START,
-	cASM_END,
-	cASM_CODE,
-	lCODE,
-	lSUB,
-	lJZ,
-	lJNZ
-};
+typedef list<string> T_str_list;
+typedef T_str_list::iterator T_str_list_iter;
 
-struct T_arg{
-	string name;
-	int	value;
-	E_code_type type;
-};
-
-struct T_code {
-	int   op;
-	T_arg arg1;
-	T_arg arg2;
-	T_arg arg3;
-};
-
-struct Type
+struct SToken
 {
-	string m_sId;
-	int m_nInt;
-	char m_cOp;
+	string str;
+	int    integer;
+	T_str_list str_list;
 };
 
-
-typedef list<T_code> T_code_list;
-
-struct T_id
-{
-	string m_name;
-	int    type;
-};
-
-typedef list<string> T_id_list;
-
-
-struct T_token
-{
-	string name;
-	int    value;
-	T_id_list id_list;
-	T_code    code;
-	T_code_list code_list;
-};
-
-#define YYSTYPE T_token
+#define YYSTYPE SToken
 
 #endif
