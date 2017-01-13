@@ -1,2 +1,2 @@
 ./main > a.out
-lua compiler.lua
+lua compiler2mcu.lua
