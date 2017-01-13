@@ -78,6 +78,7 @@ if_statement: IF '(' logical_exps ')' partener_block
 		string code = "";
 		
 		PUSH_BACK($$,M_LABEL_BGN(label_id),code);
+		PUSH_BACK($$,M_IF_BGN(label_id),code);
 		PUSH_BACK($$,M_LABEL_LOGICAL_BGN(label_id),code);
 		PUSH_BACK($$,M_LOGICAL_EXP($3),code);
 		PUSH_BACK($$,M_LABEL_LOGICAL_END(label_id),code);
@@ -86,6 +87,7 @@ if_statement: IF '(' logical_exps ')' partener_block
 		PUSH_BACK($$,M_LABEL_TRUE_END(label_id),code);
 	 	PUSH_BACK($$,M_LABEL_FALSE_BGN(label_id),code);
 	 	PUSH_BACK($$,M_LABEL_FALSE_END(label_id),code);
+		PUSH_BACK($$,M_IF_END(label_id),code);
 		PUSH_BACK($$,M_LABEL_END(label_id),code);
 		
 	}
@@ -96,6 +98,7 @@ if_statement: IF '(' logical_exps ')' partener_block
                 string code = "";
 
                 PUSH_BACK($$,M_LABEL_BGN(label_id),code);
+		PUSH_BACK($$,M_IF_BGN(label_id),code);
                 PUSH_BACK($$,M_LABEL_LOGICAL_BGN(label_id),code);
                 PUSH_BACK($$,M_LOGICAL_EXP($3),code);
                 PUSH_BACK($$,M_LABEL_LOGICAL_END(label_id),code);
@@ -105,6 +108,7 @@ if_statement: IF '(' logical_exps ')' partener_block
                 PUSH_BACK($$,M_LABEL_FALSE_BGN(label_id),code);
 		PUSH_BACK_LIST($$,$7);
                 PUSH_BACK($$,M_LABEL_FALSE_END(label_id),code);
+		PUSH_BACK($$,M_IF_END(label_id),code);
                 PUSH_BACK($$,M_LABEL_END(label_id),code);
 	}
 	;
@@ -116,6 +120,7 @@ while_statement: WHILE '(' logical_exps ')' partener_block
                 string code = "";
 
 		PUSH_BACK($$,M_LABEL_BGN(label_id),code);
+		PUSH_BACK($$,M_WHILE_BGN(label_id),code);
                 PUSH_BACK($$,M_LABEL_LOGICAL_BGN(label_id),code);
                 PUSH_BACK($$,M_LOGICAL_EXP($3),code);
                 PUSH_BACK($$,M_LABEL_LOGICAL_END(label_id),code);
@@ -125,6 +130,7 @@ while_statement: WHILE '(' logical_exps ')' partener_block
                 PUSH_BACK($$,M_LABEL_FALSE_BGN(label_id),code);
 		PUSH_BACK($$,M_LABEL_FALSE_END(label_id),code);
 		PUSH_BACK($$,M_GOTO(S_LABEL_BGN(label_id)),code);
+		PUSH_BACK($$,M_WHILE_END(label_id),code);
                 PUSH_BACK($$,M_LABEL_END(label_id),code);
 
 	}
@@ -135,6 +141,7 @@ while_statement: WHILE '(' logical_exps ')' partener_block
                 string code = "";
 
 		PUSH_BACK($$,M_LABEL_BGN(label_id),code);
+		PUSH_BACK($$,M_WHILE_BGN(label_id),code);
 		PUSH_BACK_LIST($$,$2);
 		PUSH_BACK($$,M_LABEL_LOGICAL_BGN(label_id),code);
                 PUSH_BACK($$,M_LOGICAL_EXP($5),code);
@@ -144,6 +151,7 @@ while_statement: WHILE '(' logical_exps ')' partener_block
 		PUSH_BACK($$,M_LABEL_TRUE_END(label_id),code);
 		PUSH_BACK($$,M_LABEL_FALSE_BGN(label_id),code);
                 PUSH_BACK($$,M_LABEL_FALSE_END(label_id),code);
+		PUSH_BACK($$,M_WHILE_END(label_id),code);
 		PUSH_BACK($$,M_LABEL_END(label_id),code);	
 	}
 
