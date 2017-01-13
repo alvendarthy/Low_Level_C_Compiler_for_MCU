@@ -215,4 +215,15 @@ function T.code_code_at(addr)
 	return "code", "mcu.code_code_at(" .. addr .. ")"
 end
 
+function T.code_if_bgn(lab)
+	return "ok"
+end
+
+function T.code_if_end(lab)
+	return "ok"
+end
+
+function T.code_goto(addr)
+	return "code", "mcu.code_goto(\"" .. addr .. "\")"
+end
 return T

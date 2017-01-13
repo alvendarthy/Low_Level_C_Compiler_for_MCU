@@ -40,49 +40,36 @@ function scan_new_vars(codes)
 	local loaded
 	local ret, msg
 	for linenum, code in ipairs(codes) do
-		if(string.find(code, "util.code_new_var(.*)")
-		 or string.find(code, "util.code_while_(.*)")
-		 or string.find(code, "util.code_break(.*)") 
-		 or string.find(code, "util.code_continue(.*)") 
-		 or string.find(code, "util.code_label(.*)") 
-		 or string.find(code, "util.code_math(.*)") 
-		 or string.find(code, "util.code_code_at(.*)") 
-		 or string.find(code, "util.code_ram_at(.*)") 
-		 or string.find(code, "util.code_logical(.*)") 
-							)then
-			loaded, msg = loadstring("return " .. code)
-			if(nil == loaded) then
-				msg = "bad code. " .. msg .. "[" .. linenum .. "]"
-				log(msg)
-				return nil, msg
-			end
-
-			ret, msg = loaded()
-			if(nil == ret) then
-				log(msg)
-			end
-
-			if("code" == ret) then
-				if(type(msg) == "table") then
-					for _, code in pairs(msg) do
-						out_f:write(code)
-						out_f:write('\n')
-					end
-				elseif (type(msg) == "string") then
-						code = msg
-						out_f:write(code)
-						out_f:write('\n')
-				else
-					log("bad code:" .. code)
-				end
-			elseif ("ok" == ret) then
-			else
-				print("bad code:" .. msg)
-			end
-
+		loaded, msg = loadstring("return " .. code)
+		if(nil == loaded) then
+			msg = "bad code. " .. msg .. "[" .. linenum .. "]"
+			log(msg)
+			return nil, msg
 		end
 
-		
+		ret, msg = loaded()
+		if(nil == ret) then
+			log(msg)
+		end
+
+		if("code" == ret) then
+			if(type(msg) == "table") then
+				for _, code in pairs(msg) do
+					out_f:write(code)
+					out_f:write('\n')
+				end
+			elseif (type(msg) == "string") then
+					code = msg
+					out_f:write(code)
+					out_f:write('\n')
+			else
+				log("bad code:" .. code)
+			end
+		elseif ("ok" == ret) then
+		else
+			print("bad code:" .. msg)
+		end
+
 	end
 
 	return "ok"
@@ -98,7 +85,7 @@ end
 
 load_src_file(src_f, codes)
 scan_new_vars(codes)
-show_all_vars()
+--show_all_vars()
 
 
 src_f:close()
