@@ -41,6 +41,7 @@
 #define M_LABEL_TRUE_END(id) "util.code_label(\"" S_LABEL_HEAD + (id) + "_TRUE_END\")"
 #define M_LABEL_FALSE_BGN(id) "util.code_label(\"" S_LABEL_HEAD + (id) + "_FALSE_BGN\")"
 #define M_LABEL_FALSE_END(id) "util.code_label(\"" S_LABEL_HEAD + (id) + "_FALSE_END\")"
+#define M_ASM_CODE(code) "util.code_asm_code(\"" + code + "\")"
 
 #define M_LOGICAL_EXP(exp) "util.code_logical(\"" + (exp) + "\")"
 
