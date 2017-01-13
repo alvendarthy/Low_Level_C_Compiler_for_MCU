@@ -24,8 +24,8 @@
 #define M_BREAK() "util.code_break()"
 #define M_CONTINUE() "util.code_continue()"
 #define M_LABEL(lab) "util.code_label(\"" + lab + "\")"
-#define M_CODE_AT(addr) "util.code_code_at(\"" + addr + "\")"
-#define M_RAM_AT(addr) "util.code_ram_at(\"" + addr + "\")"
+#define M_CODE_AT(addr) "util.code_code_at(" + addr + ")"
+#define M_RAM_AT(addr) "util.code_ram_at(" + addr + ")"
 
 
 #define S_LABEL_HEAD "LABEL_"
