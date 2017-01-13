@@ -4,7 +4,7 @@ type_size = {
 	["int8"] = 8
 	}
 
-type_map = {}
+var_map = {}
 
 
 function T.math(line)
@@ -22,27 +22,27 @@ function T.new_var(type, name)
 		return nil, "var: " .. name .. " is redefined."
 	end
 
-	type_map[name] = {}
-	type_map[name]["type"] = type
-	type_map[name]["name"] = name
+	var_map[name] = {}
+	var_map[name]["type"] = type
+	var_map[name]["name"] = name
 
 
 	for bitn = 0, size - 1 do
 		local bit_name = name .. "_b" .. bitn
-		type_map[bit_name] = {}
-		type_map[bit_name]["type"] = "bit"
-		type_map[bit_name]["name"] = bit_name
+		var_map[bit_name] = {}
+		var_map[bit_name]["type"] = "bit"
+		var_map[bit_name]["name"] = bit_name
 	end
 
 	return "ok", "ok"
 end
 
 function T.get_var(name)
-	return type_map[name]
+	return var_map[name]
 end
 
 function T.get_var_map()
-	return type_map
+	return var_map
 end
 
 return T
