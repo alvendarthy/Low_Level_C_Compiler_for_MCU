@@ -2,6 +2,7 @@ util = require "util.util"
 
 log = print
 src_name = "a.out"
+out_name = "a.o"
 
 local codes = {}
 
@@ -9,6 +10,12 @@ local src_f, err = io.open(src_name, "r")
 if(err) then
 	log("cannot open " .. src_name .. ": " .. err)
 	return
+end
+
+local out_f, err = io.open(out_name, "w")
+if(err) then
+        log("cannot open " .. out_name .. ": " .. err)
+        return
 end
 
 function load_src_file(file, tab)
@@ -56,10 +63,13 @@ function scan_new_vars(codes)
 			if("code" == ret) then
 				if(type(msg) == "table") then
 					for _, code in pairs(msg) do
-						print(code)
+						out_f:write(code)
+						out_f:write('\n')
 					end
 				elseif (type(msg) == "string") then
-					print(msg)
+						code = msg
+						out_f:write(code)
+						out_f:write('\n')
 				else
 					log("bad code:" .. code)
 				end
@@ -87,3 +97,4 @@ scan_new_vars(codes)
 
 
 src_f:close()
+out_f:close()
