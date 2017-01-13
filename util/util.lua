@@ -2,6 +2,7 @@ local Stack = require "util.stack"
 
 local T = {}
 
+local byte_nbit = 8
 
 local type_size = {
 	["int8"] = 8
@@ -12,12 +13,19 @@ local label_stack = Stack:new()
 local if_stack = Stack:new()
 local while_stack = Stack:new()
 
+local cur_code_pointer = 0
+local cur_ram_pointer = 0
 
-function T.code_new_var(type, name)
-	local size = type_size[type]
+function ram_addr_auto_add(ty)
+	local size =  math.floor(type_size[ty] / byte_nbit)
+	cur_ram_pointer = cur_ram_pointer + size
+end
+
+function T.code_new_var(ty, name)
+	local size = type_size[ty]
 
 	if(nil == size) then
-		return nil, name .. " bad type: " .. type
+		return nil, name .. " bad type: " .. ty
 	end
 
 	if(T.get_var(name))then
@@ -25,8 +33,9 @@ function T.code_new_var(type, name)
 	end
 
 	var_map[name] = {}
-	var_map[name]["type"] = type
+	var_map[name]["type"] = ty
 	var_map[name]["name"] = name
+	var_map[name]["addr"] = cur_ram_pointer
 
 
 	for bitn = 0, size - 1 do
@@ -34,7 +43,10 @@ function T.code_new_var(type, name)
 		var_map[bit_name] = {}
 		var_map[bit_name]["type"] = "bit"
 		var_map[bit_name]["name"] = bit_name
+		var_map[bit_name]["addr"] = cur_ram_pointer
 	end
+
+	ram_addr_auto_add(ty)
 
 	return "ok"
 end
@@ -169,9 +181,9 @@ function T.code_logical(exps)
 		check_var(exp)
 		
 		if(logi_con == "" or logi_con == "&&") then
-			push_code(ret_codes, "mcu.code_jmp(\"" .. exp .."\", \"nil\", \"" .. false_label .. "\")")
+			push_code(ret_codes, "mcu.code_jmp(\"" .. exp .."\", nil, \"" .. false_label .. "\")")
 		elseif(logi_con == "||") then
-			push_code(ret_codes, "mcu.code_jmp(\"" .. exp .."\", \"" .. true_label .. "\", \"nil\")")
+			push_code(ret_codes, "mcu.code_jmp(\"" .. exp .."\", \"" .. true_label .. "\", nil)")
 		end
 	end
 
@@ -181,7 +193,7 @@ end
 
 function T.code_math(line)
 	check_var(line)
-	return "code", "mcu.math(\"" .. line .. "\")"
+	return "code", "mcu.code_math(\"" .. line .. "\")"
 end
 
 function T.get_var(name)
@@ -190,6 +202,17 @@ end
 
 function T.get_var_map()
 	return var_map
+end
+
+function T.code_ram_at(addr)
+	cur_ram_pointer = addr
+	return "ok"
+end
+
+
+function T.code_code_at(addr)
+	cur_code_pointer = addr
+	return "code", "mcu.code_code_at(" .. addr .. ")"
 end
 
 return T

@@ -46,6 +46,8 @@ function scan_new_vars(codes)
 		 or string.find(code, "util.code_continue(.*)") 
 		 or string.find(code, "util.code_label(.*)") 
 		 or string.find(code, "util.code_math(.*)") 
+		 or string.find(code, "util.code_code_at(.*)") 
+		 or string.find(code, "util.code_ram_at(.*)") 
 		 or string.find(code, "util.code_logical(.*)") 
 							)then
 			loaded, msg = loadstring("return " .. code)
@@ -73,6 +75,9 @@ function scan_new_vars(codes)
 				else
 					log("bad code:" .. code)
 				end
+			elseif ("ok" == ret) then
+			else
+				print("bad code:" .. msg)
 			end
 
 		end
@@ -87,13 +92,13 @@ function show_all_vars()
 	local vars = util.get_var_map()
 	local var_name, info
 	for var_name, info in pairs (vars) do
-		print(var_name .. " type: " .. info.type)
+		print(var_name .. " type: " .. info.type .. " addr: " .. info.addr)
 	end
 end
 
 load_src_file(src_f, codes)
 scan_new_vars(codes)
---show_all_vars()
+show_all_vars()
 
 
 src_f:close()
