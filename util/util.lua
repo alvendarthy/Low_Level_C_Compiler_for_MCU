@@ -22,15 +22,15 @@ function ram_addr_auto_add(ty)
 	cur_ram_pointer = cur_ram_pointer + size
 end
 
-function T.code_new_var(ty, name, src)
+function T.code_new_var(lineno, ty, name, src)
 	local size = type_size[ty]
 
 	if(nil == size) then
-		return nil, name .. " bad type: " .. ty
+		return nil, "line: " .. lineno .. ". var: " .. name .. ". bad type: " .. ty
 	end
 
 	if(T.get_var(name))then
-		return nil, "var: " .. name .. " is redefined."
+		return nil, "line: " .. lineno .. ". var: " .. name .. " is redefined."
 	end
 
 
@@ -55,11 +55,11 @@ function T.code_new_var(ty, name, src)
 	elseif (ty == "bit") then
 		local src_var = var_map[src]
 		if(nil == src_var)then
-			return nil, "var undefined: " .. src
+			return nil, "line: " .. lineno .. ". var undefined: " .. src
 		end
 
 		if(src_var.type ~= ty) then
-			return nil, "type not matched: " .. src .. " should be " .. ty .. "."
+			return nil, "line: " .. lineno .. ". type not matched: " .. src .. " should be " .. ty .. "."
 		end
 
 		var_map[name] = {}
@@ -68,7 +68,7 @@ function T.code_new_var(ty, name, src)
 		var_map[name]["addr"] = src_var.addr
 		var_map[name]["bitaddr"] = src_var.bitaddr
 	else
-		return nil, "bad defination: " .. name
+		return nil, "line: " .. lineno .. ". bad defination: " .. name
 	end
 
 	return "ok"
@@ -83,7 +83,7 @@ function get_label_info(label)
 	return id, ty
 end
 
-function T.code_while_bgn(label)
+function T.code_while_bgn(lineno,label)
 	local id, msg = get_label_info(label)
 	if(nil == id) then
 		return id, msg
@@ -93,7 +93,7 @@ function T.code_while_bgn(label)
 	return "ok"
 end
 
-function T.code_while_end(label)
+function T.code_while_end(lineno,label)
 	local id, msg = get_label_info(label)
 	if(nil == id) then
 		return id, msg
@@ -103,27 +103,27 @@ function T.code_while_end(label)
 	return "ok"
 end
 
-function T.code_break()
+function T.code_break(lineno)
 	local id = while_stack:top()
 	if(nil == id) then
-		return nil, "wrong break exp, should be in loop expressions."
+		return nil, "line: " .. lineno .. ". wrong break exp, should be in loop expressions."
 	end
 
 	return "code", "mcu.code_goto(LABEL_" .. id .. "_END)"
 end
 
-function T.code_continue()
+function T.code_continue(lineno)
 	local id = while_stack:top()
 	if(nil == id) then
-		return nil, "wrong break exp, should be in loop expressions."
+		return nil, "line: " .. lineno .. ". wrong continue exp, should be in loop expressions."
 	end
 
 	return "code", "mcu.code_goto(LABEL_" .. id .. "_TRUE_BGN)"
 end
 
-function T.code_label(label)
+function T.code_label(lineno,label)
 	if(nil == label)then
-		return nil, "bad label:" .. label
+		return nil, "line: " .. lineno .. ". bad label:" .. label
 	end
 
 	local id = get_label_info(label)
@@ -149,7 +149,7 @@ end
 
 local push_code = table.insert
 
-function check_var(exp)
+function check_var(lineno, exp)
 	local rest = exp
 	local var
 	local ret = "ok"
@@ -166,7 +166,7 @@ function check_var(exp)
 		if(not is_number_str(var))then
 			if(not T.get_var(var)) then
 				ret = nil
-				print("undefined var: " .. var)
+				print("line: " .. lineno .. ". undefined var: " .. var)
 			end
 		end
 	end
@@ -175,7 +175,7 @@ function check_var(exp)
 end
 
 
-function T.code_logical(exps)
+function T.code_logical(lineno,exps)
 	local exp, logi_con, rest
 
 	local ret_codes = {}
@@ -200,7 +200,7 @@ function T.code_logical(exps)
 
 		logi_con = logi_con or "";
 
-		check_var(exp)
+		check_var(lineno, exp)
 		
 		if(logi_con == "" or logi_con == "&&") then
 			push_code(ret_codes, "mcu.code_jmp(\"" .. exp .."\", nil, \"" .. false_label .. "\")")
@@ -213,8 +213,8 @@ function T.code_logical(exps)
 end
 
 
-function T.code_math(line)
-	check_var(line)
+function T.code_math(lineno,line)
+	check_var(lineno, line)
 	return "code", "mcu.code_math(\"" .. line .. "\")"
 end
 
@@ -226,39 +226,39 @@ function T.get_var_map()
 	return var_map
 end
 
-function T.code_ram_at(addr)
+function T.code_ram_at(lineno,addr)
 	cur_ram_pointer = addr
 	return "ok"
 end
 
 
-function T.code_code_at(addr)
+function T.code_code_at(lineno,addr)
 	cur_code_pointer = addr
 	return "code", "mcu.code_code_at(" .. addr .. ")"
 end
 
-function T.code_if_bgn(lab)
+function T.code_if_bgn(lineno,lab)
 	return "ok"
 end
 
-function T.code_if_end(lab)
+function T.code_if_end(lineno,lab)
 	return "ok"
 end
 
-function T.code_goto(addr)
+function T.code_goto(lineno,addr)
 	return "code", "mcu.code_goto(\"" .. addr .. "\")"
 end
 
 
-function T.code_asm_code(code)
+function T.code_asm_code(lineno,code)
 	return "code", "mcu.code_asm_code(\"" .. code .. "\")"
 end
 
-function T.code_func_bgn(code)
+function T.code_func_bgn(lineno,code)
 	return "code", "mcu.code_func_bgn(\"" .. code .. "\")"
 end
 
-function T.code_func_end(code)
+function T.code_func_end(lineno,code)
 	return "code", "mcu.code_func_end(\"" .. code .. "\")"
 end
 

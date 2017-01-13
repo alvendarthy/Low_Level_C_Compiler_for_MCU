@@ -408,7 +408,7 @@ asm_codes : asm_codes ASM_CODE
 
 void yyerror(const char *s)
 {
-	cerr<<"ERR: "<<s << ". line: " << yylineno << ". before \"" << yytext << "\"" << endl;
+	cerr<< "line: " << yylineno <<". ERR: "<< s  << ". before \"" << yytext << "\"." << endl;
 }
 
 int main()
