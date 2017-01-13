@@ -54,7 +54,7 @@ end
 function get_label_info(label)
 	local id  = string.match(label, "LABEL_(%d+)_")
         if(nil == id) then
-                return nil, nil, "bad while_bgn code"
+                return nil, "no id found"
         end
 
 	return id, ty
@@ -104,15 +104,14 @@ function T.code_label(label)
 	end
 
 	local id = get_label_info(label)
-        if(nil == id) then
-                return nil, "bad label" .. label
-        end
-
-	if(string.find(label, "_BGN$")) then
-		label_stack:push(id)
-	elseif (string.find(label, "_END$")) then
-		label_stack:pop(id)
+        if(id) then
+		if(string.find(label, "_BGN$")) then
+			label_stack:push(id)
+		elseif (string.find(label, "_END$")) then
+			label_stack:pop(id)
+		end
 	end
+	-- else normal label
 
 	return "code", "mcu.code_label(" .. label .. ")"
 end
@@ -226,4 +225,10 @@ end
 function T.code_goto(addr)
 	return "code", "mcu.code_goto(\"" .. addr .. "\")"
 end
+
+
+function T.code_asm_code(code)
+	return "code", "mcu.code_asm_code(\"" .. code .. "\")"
+end
+
 return T

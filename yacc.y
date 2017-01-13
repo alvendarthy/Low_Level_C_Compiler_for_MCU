@@ -365,12 +365,14 @@ asm_block: AT_ASM '{' asm_codes '}'
 
 asm_codes : asm_codes ASM_CODE
 	{
-		$$.assign($1.begin(), $1.end());
-                $$.push_back($2);
+		string code = "";
+		$$ = $1;
+                PUSH_BACK($$,M_ASM_CODE($2),code);
 	}
 	| ASM_CODE
 	{
-		$$.push_back($1);
+		string code = "";
+                PUSH_BACK($$,M_ASM_CODE($1),code);
 	}
 	| {}
 	;
