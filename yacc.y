@@ -8,6 +8,8 @@ extern "C"
 {
 	void yyerror(const char *s);
 	extern int yylex(void);
+	extern char * yytext;
+	extern int yylineno;
 }
 
 int yydebug=1;
@@ -18,11 +20,11 @@ int yydebug=1;
 %token<str> CMP
 %token<str> LOGICAL_CHAR CALC_CHAR SELF_CALC
 %token SHL RSHL SHR RSHR
-%token<integer>INTEGER
+%token<str>INTEGER
 %token<str>IDENTIFIER
 %token<str> ASM_CODE
 %token AT_RAM  AT_CODE  AT_FUN AT_END AT_ASM
-%token INT8
+%token INT8 BIT
 %type<str_list> codes indep_codes block function_block single_code
 %type<str_list> if_statement partener_block
 %type<str_list> while_statement defination_code identifiers 
@@ -171,15 +173,15 @@ logical_exp : IDENTIFIER CMP IDENTIFIER
         }
         | IDENTIFIER CMP INTEGER
         {       
-                $$ = $1 + $2 + int2string($3);
+                $$ = $1 + $2 + $3;
         }
         | INTEGER CMP IDENTIFIER 
         {       
-                $$ = int2string($1) +$2 + $3;
+                $$ = $1 +$2 + $3;
         }
 	| INTEGER
 	{
-		$$ = int2string($1);
+		$$ = $1;
 	}
 	;
 
@@ -222,13 +224,13 @@ single_code : defination_code
 addr_set : AT_CODE INTEGER
 	{
 		string code = "";
-		string addr = int2string($2);
+		string addr = $2;
                 PUSH_BACK($$,M_CODE_AT(addr),code);
 	}
 	| AT_RAM INTEGER
 	{
 		string code = "";
-		string addr = int2string($2);
+		string addr = $2;
                 PUSH_BACK($$,M_RAM_AT(addr),code);
 	}
 	;
@@ -273,15 +275,15 @@ calc_statement : IDENTIFIER '=' IDENTIFIER CALC_CHAR IDENTIFIER ';'
         }
         | IDENTIFIER '=' IDENTIFIER CALC_CHAR INTEGER ';'
         {
-                $$ = $1 + "=" + $3 + $4 + int2string($5);
+                $$ = $1 + "=" + $3 + $4 + $5;
         }
         | IDENTIFIER '=' INTEGER CALC_CHAR IDENTIFIER  ';'
         {
-                $$ = $1 + "=" + int2string($3) + $4 + $5;
+                $$ = $1 + "=" + $3 + $4 + $5;
         }
 	| IDENTIFIER '=' INTEGER ';'
         {
-                $$ = $1 + "=" + int2string($3);
+                $$ = $1 + "=" + $3;
         }
 	;
 
@@ -297,6 +299,11 @@ defination_code : INT8 identifiers ';'
 			string code = M_NEW_INT8(*iter);
 			$$.push_back(code);
 		}
+	}
+	| BIT IDENTIFIER '=' IDENTIFIER ';'
+	{
+		string code;
+		PUSH_BACK($$, M_NEW_BIT($2,$4), code);
 	}
 	;
 
@@ -380,7 +387,7 @@ asm_codes : asm_codes ASM_CODE
 
 void yyerror(const char *s)
 {
-	cerr<<"------------"<<s<<endl;
+	cerr<<"ERR: "<<s << ". line: " << yylineno << ". before \"" << yytext << "\"" << endl;
 }
 
 int main()

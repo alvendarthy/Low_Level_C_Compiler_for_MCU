@@ -79,7 +79,7 @@ function show_all_vars()
 	local vars = util.get_var_map()
 	local var_name, info
 	for var_name, info in pairs (vars) do
-		print(var_name .. " type: " .. info.type .. " addr: " .. info.addr)
+		print(var_name .. " type: " .. info.type .. " addr: " .. info.addr .. " bit_addr: " .. info.bitaddr)
 	end
 end
 

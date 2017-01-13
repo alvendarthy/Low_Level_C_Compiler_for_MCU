@@ -12,6 +12,7 @@ extern "C"
 
 %x      ASM ASM_READY
 %x	COMMENT MULTY_COMMENT
+%option yylineno
 
 nondigit	([_A-Za-z])
 
@@ -75,6 +76,9 @@ blank_chars	([ \f\r\t\v])
                 return INT8;
         }
 
+"bit" {
+                return BIT;
+        }
 "if"    {
                 return IF;
         }
@@ -133,17 +137,17 @@ blank_chars	([ \f\r\t\v])
 		}
 
 {integer}	{
-			yylval.integer=atoi(yytext);
+			yylval.str=yytext;
 			return INTEGER;
 		}
 
 {bin}		{
-			yylval.integer=bin2int(yytext, strlen(yytext));
+			yylval.str=int2string(bin2int(yytext, strlen(yytext)));
                         return INTEGER;
 		}
 
 {hex}		{
-			yylval.integer=hex2int(yytext, strlen(yytext));
+			yylval.str=int2string(hex2int(yytext, strlen(yytext)));
                         return INTEGER;
 		}
 

@@ -14,6 +14,7 @@
 	(tar).insert((tar).end(),(src).begin(),(src).end())
 
 #define S_INT8	  "int8"
+#define S_BIT	  "bit"
 #define S_NEW_VAR "util.code_new_var"
 
 
@@ -48,6 +49,7 @@
 #define S_NEW_FUNC_BGN "util.code_func_bgn"
 #define S_NEW_FUNC_END "util.code_func_end"
 #define M_NEW_INT8(name) (S_NEW_VAR "(\"" S_INT8 "\",\"" + (name) + "\")")
+#define M_NEW_BIT(name,src) (S_NEW_VAR "(\"" S_BIT "\",\"" + (name) + "\", \"" + src+ "\")")
 #define M_NEW_FUNC_BGN(name) (S_NEW_FUNC_BGN "(\"" + (name) + "\")")
 #define M_NEW_FUNC_END(name) (S_NEW_FUNC_END "(\"" + (name) + "\")")
 
@@ -62,7 +64,6 @@ typedef T_str_list::iterator T_str_list_iter;
 struct SToken
 {
 	string str;
-	int    integer;
 	T_str_list str_list;
 };
 

@@ -5,7 +5,8 @@ local T = {}
 local byte_nbit = 8
 
 local type_size = {
-	["int8"] = 8
+	["int8"] = 8,
+	["bit"] = 1
 	}
 
 local var_map = {}
@@ -21,7 +22,7 @@ function ram_addr_auto_add(ty)
 	cur_ram_pointer = cur_ram_pointer + size
 end
 
-function T.code_new_var(ty, name)
+function T.code_new_var(ty, name, src)
 	local size = type_size[ty]
 
 	if(nil == size) then
@@ -32,21 +33,43 @@ function T.code_new_var(ty, name)
 		return nil, "var: " .. name .. " is redefined."
 	end
 
-	var_map[name] = {}
-	var_map[name]["type"] = ty
-	var_map[name]["name"] = name
-	var_map[name]["addr"] = cur_ram_pointer
+
+	if(ty == "int8")then
+		var_map[name] = {}
+		var_map[name]["type"] = ty
+		var_map[name]["name"] = name
+		var_map[name]["addr"] = cur_ram_pointer
+		var_map[name]["bitaddr"] = -1
 
 
-	for bitn = 0, size - 1 do
-		local bit_name = name .. "_b" .. bitn
-		var_map[bit_name] = {}
-		var_map[bit_name]["type"] = "bit"
-		var_map[bit_name]["name"] = bit_name
-		var_map[bit_name]["addr"] = cur_ram_pointer
+		for bitn = 0, size - 1 do
+			local bit_name = name .. "_b" .. bitn
+			var_map[bit_name] = {}
+			var_map[bit_name]["type"] = "bit"
+			var_map[bit_name]["name"] = bit_name
+			var_map[bit_name]["addr"] = cur_ram_pointer
+			var_map[bit_name]["bitaddr"] = bitn
+		end
+
+		ram_addr_auto_add(ty)
+	elseif (ty == "bit") then
+		local src_var = var_map[src]
+		if(nil == src_var)then
+			return nil, "var undefined: " .. src
+		end
+
+		if(src_var.type ~= ty) then
+			return nil, "type not matched: " .. src .. " should be " .. ty .. "."
+		end
+
+		var_map[name] = {}
+		var_map[name]["type"] = src_var.type
+		var_map[name]["name"] = src
+		var_map[name]["addr"] = src_var.addr
+		var_map[name]["bitaddr"] = src_var.bitaddr
+	else
+		return nil, "bad defination: " .. name
 	end
-
-	ram_addr_auto_add(ty)
 
 	return "ok"
 end
