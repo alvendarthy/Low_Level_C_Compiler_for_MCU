@@ -105,6 +105,7 @@ if_statement: IF '(' logical_exps ')' partener_block
                 PUSH_BACK($$,M_LABEL_TRUE_BGN(label_id),code);
                 PUSH_BACK_LIST($$,$5);
                 PUSH_BACK($$,M_LABEL_TRUE_END(label_id),code);
+                PUSH_BACK($$,M_GOTO(S_LABEL_END(label_id)),code);
                 PUSH_BACK($$,M_LABEL_FALSE_BGN(label_id),code);
 		PUSH_BACK_LIST($$,$7);
                 PUSH_BACK($$,M_LABEL_FALSE_END(label_id),code);
