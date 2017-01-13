@@ -38,6 +38,7 @@ function scan_new_vars(codes)
 		 or string.find(code, "util.code_break(.*)") 
 		 or string.find(code, "util.code_continue(.*)") 
 		 or string.find(code, "util.code_label(.*)") 
+		 or string.find(code, "util.code_math(.*)") 
 		 or string.find(code, "util.code_logical(.*)") 
 							)then
 			loaded, msg = loadstring("return " .. code)

@@ -274,9 +274,13 @@ calc_statement : IDENTIFIER '=' IDENTIFIER CALC_CHAR IDENTIFIER ';'
         {
                 $$ = $1 + "=" + $3 + $4 + int2string($5);
         }
-        | INTEGER '=' IDENTIFIER CALC_CHAR IDENTIFIER  ';'
+        | IDENTIFIER '=' INTEGER CALC_CHAR IDENTIFIER  ';'
         {
-                $$ = int2string($1) + "=" + $3 + $4 + $5;
+                $$ = $1 + "=" + int2string($3) + $4 + $5;
+        }
+	| IDENTIFIER '=' INTEGER ';'
+        {
+                $$ = $1 + "=" + int2string($3);
         }
 	;
 

@@ -12,9 +12,6 @@ local label_stack = Stack:new()
 local if_stack = Stack:new()
 local while_stack = Stack:new()
 
-function T.code_math(line)
-	print(line)
-end
 
 function T.code_new_var(type, name)
 	local size = type_size[type]
@@ -42,17 +39,17 @@ function T.code_new_var(type, name)
 	return "ok"
 end
 
-function get_label_id(label)
-	local id = string.match(label, "LABEL_(%d+)_")
+function get_label_info(label)
+	local id  = string.match(label, "LABEL_(%d+)_")
         if(nil == id) then
-                return nil, "bad while_bgn code"
+                return nil, nil, "bad while_bgn code"
         end
 
-	return id
+	return id, ty
 end
 
 function T.code_while_bgn(label)
-	local id, msg = get_label_id(label)
+	local id, msg = get_label_info(label)
 	if(nil == id) then
 		return id, msg
 	end
@@ -62,7 +59,7 @@ function T.code_while_bgn(label)
 end
 
 function T.code_while_end(label)
-	local id, msg = get_label_id(label)
+	local id, msg = get_label_info(label)
 	if(nil == id) then
 		return id, msg
 	end
@@ -94,11 +91,97 @@ function T.code_label(label)
 		return nil, "bad label:" .. label
 	end
 
-	return "code", "mcu.label(" .. label .. ")"
+	local id = get_label_info(label)
+        if(nil == id) then
+                return nil, "bad label" .. label
+        end
+
+	if(string.find(label, "_BGN$")) then
+		label_stack:push(id)
+	elseif (string.find(label, "_END$")) then
+		label_stack:pop(id)
+	end
+
+	return "code", "mcu.code_label(" .. label .. ")"
 end
 
-function T.code_logical(exp)
-	return "code", {"logical exp start", exp, "logical exp end"}
+function is_number_str(str)
+	if string.match(str, "^%d+$") then 
+		return true
+	else
+		return false
+	end
+end
+
+local push_code = table.insert
+
+function check_var(exp)
+	local rest = exp
+	local var
+	local ret = "ok"
+
+	while(1) do
+		if nil == rest then
+			break
+		end
+		var, rest = string.match(rest, "([%d%a_]+)(.*)")
+		if(nil == var) then
+			break
+		end
+
+		if(not is_number_str(var))then
+			if(not T.get_var(var)) then
+				ret = nil
+				print("undefined var: " .. var)
+			end
+		end
+	end
+
+	return ret
+end
+
+
+function T.code_logical(exps)
+	local exp, logi_con, rest
+
+	local ret_codes = {}
+	local id = label_stack:top()
+	local true_label =  "LABEL_" .. id .. "_TRUE_BGN"
+	local false_label = "LABEL_" .. id .. "_FALSE_BGN"
+
+	local ret
+
+	rest = exps
+
+	while( 1 )do
+
+		if nil == rest then
+			break
+		end
+
+		exp, logi_con, rest = string.match(rest,"([^|&]+)([|&]*)(.*)")
+		if(nil == exp)then
+			break
+		end
+
+		logi_con = logi_con or "";
+
+		check_var(exp)
+		
+		if(logi_con == "" or logi_con == "&&") then
+			push_code(ret_codes, "mcu.code_jmp(\"" .. exp .."\", \"nil\", \"" .. false_label .. "\")")
+		elseif(logi_con == "||") then
+			push_code(ret_codes, "mcu.code_jmp(\"" .. exp .."\", \"" .. true_label .. "\", \"nil\")")
+		end
+	end
+
+	return "code", ret_codes
+end
+
+
+function T.code_math(line)
+	check_var(line)
+	return "code", "mcu.math(\"" .. line .. "\")"
 end
 
 function T.get_var(name)

@@ -106,29 +106,13 @@ blank_chars	([ \f\r\t\v])
 		return GOTO;
 	}
 
-">>" {
-		return SHR;
-	}
-
-">>>" {
-		return RSHR;
-	}
-
-"<<" {
-		return SHL;
-	}
-
-"<<<" {
-		return RSHL;
-	}
-
 (\+\+)|(\-\-) {
 		yylval.str=yytext;
 		return SELF_CALC;
 	}
 
 
-(\+)|(\-)|(\*)|(\\) {
+(\+)|(\-)|(\*)|(\\)|(<<)|(<<<)|(>>)|(>>>)|(\&)|(\|)|(\^)|(\~) {
 		yylval.str=yytext;
                 return CALC_CHAR;
 	}
