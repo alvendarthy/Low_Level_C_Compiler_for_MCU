@@ -25,11 +25,9 @@ s ++;
 s --;
 
 while(a == 1){
-	int8 a,b,c;
 }
 
 do {
-	int8 a,b,c;
 }while(a ==1 && a < c || c ==  1);
 @function afunc() @asm{
 	asm code1;

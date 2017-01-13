@@ -25,4 +25,4 @@ lex.yy.c: lex.l
 
 
 clean:
-	@rm -f $(OBJECT)  *.o
+	@rm -f $(OBJECT)  *.o yacc.tab.c lex.yy.c
