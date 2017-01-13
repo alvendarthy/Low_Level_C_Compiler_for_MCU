@@ -231,4 +231,12 @@ function T.code_asm_code(code)
 	return "code", "mcu.code_asm_code(\"" .. code .. "\")"
 end
 
+function T.code_func_bgn(code)
+	return "code", "mcu.code_func_bgn(\"" .. code .. "\")"
+end
+
+function T.code_func_end(code)
+	return "code", "mcu.code_func_end(\"" .. code .. "\")"
+end
+
 return T
