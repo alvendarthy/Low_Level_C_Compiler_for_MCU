@@ -1,6 +1,8 @@
 %{
 #include "main.h"
 #include "set_lable_id.h"
+#include <fstream> 
+#include <iostream>
 
 int g_lable_id = 0;
 
@@ -11,6 +13,8 @@ extern "C"
 	extern char * yytext;
 	extern int yylineno;
 }
+
+string out_file = "a.out";
 
 int yydebug=1;
 
@@ -36,10 +40,17 @@ int yydebug=1;
 
 finally : codes
 	{
+		ofstream outfile("a.out");
+		if(!outfile){
+			cout << "cannot open outfile: " << out_file << endl;
+		} else {
+	
 		for(T_str_list_iter iter = $1.begin();iter != $1.end(); iter ++){
-			cout << *iter << endl;
+			outfile << *iter << endl;
+		}
 		}
 
+		outfile.close();
 	}
 	| {}
 	;
@@ -220,6 +231,10 @@ single_code : defination_code
 	{
 		$$ = $1;
 	}
+	| error ';'
+	{
+	}
+	;
 
 addr_set : AT_CODE INTEGER
 	{
@@ -368,6 +383,9 @@ asm_block: AT_ASM '{' asm_codes '}'
 	{
 		$$ = $3;
 	}
+	| error '}'
+	{
+	}
 	;
 
 asm_codes : asm_codes ASM_CODE
@@ -382,6 +400,9 @@ asm_codes : asm_codes ASM_CODE
                 PUSH_BACK($$,M_ASM_CODE($1),code);
 	}
 	| {}
+	| error '\n'
+	{
+	}
 	;
 %%
 
