@@ -1,2 +1,2 @@
-./main > a.out
+./main
 lua compiler2mcu.lua
