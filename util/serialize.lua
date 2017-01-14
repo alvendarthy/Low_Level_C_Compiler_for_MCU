@@ -1,18 +1,11 @@
 local function serialize (t)
-	local mark={}  
-	local assign={}  
-	local function ser_table(tbl,parent)  
-		mark[tbl]=parent  
+	local function ser_table(tbl)  
 		local tmp={}  
 		for k,v in pairs(tbl) do  
 			local key= type(k)=="number" and "["..k.."]" or "[".. string.format("%q", k) .."]"  
 			if type(v)=="table" then  
-				local dotkey= parent.. key  
-				if mark[v] then  
-					table.insert(assign,dotkey.."='"..mark[v] .."'")  
-				else  
-					table.insert(tmp, key.."="..ser_table(v,dotkey))  
-				end  
+				local dotkey= key  
+				table.insert(tmp, key.."="..ser_table(v,dotkey))  
 			elseif type(v) == "string" then  
 				table.insert(tmp, key.."=".. string.format('%q', v))  
 			elseif type(v) == "number" or type(v) == "boolean" then  
@@ -22,7 +15,7 @@ local function serialize (t)
 		return "{"..table.concat(tmp,",").."}"  
 	end
 
-	return "do local ret="..ser_table(t,"ret")..table.concat(assign," ").." return ret end" 
+	return "return "..ser_table(t,"ret")
 end
 
 return serialize

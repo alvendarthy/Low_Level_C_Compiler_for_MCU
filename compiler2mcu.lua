@@ -1,4 +1,5 @@
 util = require "util.util"
+serialize = require "util.serialize"
 
 log = print
 src_name = "a.out"
@@ -77,16 +78,17 @@ end
 
 function show_all_vars()
 	local vars = util.get_var_map()
-	local var_name, info
 	for var_name, info in pairs (vars) do
 		print(var_name .. " type: " .. info.type .. " addr: " .. info.addr .. " bit_addr: " .. info.bitaddr)
 	end
 end
 
+
 load_src_file(src_f, codes)
 scan_new_vars(codes)
---show_all_vars()
 
+local vars = util.get_var_map()
+print(serialize(vars))
 
 src_f:close()
 out_f:close()
