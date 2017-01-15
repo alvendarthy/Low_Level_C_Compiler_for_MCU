@@ -6,13 +6,16 @@ local byte_nbit = 8
 
 local type_size = {
 	["int8"] = 8,
-	["bit"] = 1
+	["bit"] = 1,
+	["function"] = 8
 	}
 
 local var_map = {}
 local label_stack = Stack:new()
 local if_stack = Stack:new()
 local while_stack = Stack:new()
+
+local function_in = 0
 
 local cur_code_pointer = 0
 local cur_ram_pointer = 0
@@ -254,12 +257,49 @@ function T.code_asm_code(lineno,code)
 	return "code", "mcu.code_asm_code(\"" .. code .. "\")"
 end
 
-function T.code_func_bgn(lineno,code)
-	return "code", "mcu.code_func_bgn(\"" .. code .. "\")"
+function T.code_func_bgn(lineno,name)
+	if(T.get_var(name))then
+		return nil, "line: " .. lineno .. ". function: " .. name .. " redefined."
+	end
+
+	var_map[name] = {}
+        var_map[name]["type"] = "function"
+        var_map[name]["name"] = name
+        var_map[name]["addr"] = -1
+        var_map[name]["bitaddr"] = -1
+
+	function_in = function_in + 1
+
+	return "code", "mcu.code_func_bgn(\"" .. name .. "\")"
 end
 
-function T.code_func_end(lineno,code)
-	return "code", "mcu.code_func_end(\"" .. code .. "\")"
+function T.code_func_end(lineno,name)
+	function_in = function_in -1
+	return "code", "mcu.code_func_end(\"" .. name .. "\")"
 end
+
+function T.code_return(lineno,name)
+	if(function_in <= 0 ) then
+		return nil, "line: " .. lineno .. ". return should be in function blocks."
+	end
+
+	name = name or ""
+
+	return "code", "mcu.code_return(\"" .. name .. "\")"
+end
+
+function T.code_call_func(lineno,name)
+	local func_info = T.get_var(name)
+	if(nil == func_info) then
+		return nil, "line: " .. lineno .. ". function: " .. name .. " undefined."
+	end
+
+	if(func_info.type ~= "function") then
+		return nil, "line: " .. lineno .. ". " .. name .. " is not defined as \"function\", but " .. func_info.type .. "."
+	end
+
+	return "code", "mcu.call_func(\"" .. name .. "\")"
+end
+
 
 return T

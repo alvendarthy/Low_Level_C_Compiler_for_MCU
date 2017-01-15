@@ -22,8 +22,8 @@
 #define S_LABEL_END(id) (S_LABEL_HEAD + (id) + "_END")
 #define S_LABEL_TRUE_BGN(id) (S_LABEL_HEAD + (id) + "_TRUE_BGN")
 #define M_GOTO(lab) "util.code_goto(" + int2string(yylineno) + ", \"" + lab + "\")"
-#define M_BREAK() "util.code_break(" + int2string(yylineno) + ",)"
-#define M_CONTINUE() "util.code_continue(" + int2string(yylineno) + ",)"
+#define M_BREAK() "util.code_break(" + int2string(yylineno) + ")"
+#define M_CONTINUE() "util.code_continue(" + int2string(yylineno) + ")"
 #define M_LABEL(lab) "util.code_label(" + int2string(yylineno) + ",\"" + lab + "\")"
 #define M_CODE_AT(addr) "util.code_code_at(" + int2string(yylineno) + "," + addr + ")"
 #define M_RAM_AT(addr) "util.code_ram_at(" + int2string(yylineno) + "," + addr + ")"
@@ -54,6 +54,7 @@
 #define M_NEW_FUNC_BGN(name) (S_NEW_FUNC_BGN "(" + int2string(yylineno) + ",\"" + (name) + "\")")
 #define M_NEW_FUNC_END(name) (S_NEW_FUNC_END "(" + int2string(yylineno) + ",\"" + (name) + "\")")
 #define M_CALL_FUNC(name) (S_CALL_FUNC "(" + int2string(yylineno) + ",\"" + (name) + "\")")
+#define M_RETURN_FUNC(name) ("util.code_return(" + int2string(yylineno) + ",\"" + (name) + "\")")
 
 #define S_MATH "util.code_math"
 #define M_MATH(line) (S_MATH "(" + int2string(yylineno) + ",\"" + line + "\")")

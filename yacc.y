@@ -251,6 +251,11 @@ single_code : defination_code
 	{
 		$$ = $1;
 	}
+	| RETURN ';'
+	{
+		string code;
+		PUSH_BACK($$,(M_RETURN_FUNC("")),code);
+	}
 	| error ';'
 	{
 	}
