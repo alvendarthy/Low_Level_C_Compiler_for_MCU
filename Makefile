@@ -1,12 +1,11 @@
 LEX=flex
 YACC=bison
 CC=g++
-OBJECT=main
+OBJECT=lexparser
 FLAGS= -g
 
 $(OBJECT): lex.yy.o  yacc.tab.o set_lable_id.o
 	$(CC) lex.yy.o yacc.tab.o set_lable_id.o -o $(OBJECT)
-	@./$(OBJECT)
 
 lex.yy.o: lex.yy.c  yacc.tab.h  main.h
 	$(CC) -c lex.yy.c $(FLAGS)

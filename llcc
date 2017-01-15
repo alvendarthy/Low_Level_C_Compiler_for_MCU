@@ -1,2 +1,2 @@
-./main $1 a.out
+./lexparser $1 a.out
 lua compiler2mcu.lua a.out a.mcu a.vars.lua
