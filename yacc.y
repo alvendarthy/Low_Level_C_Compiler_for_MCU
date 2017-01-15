@@ -29,7 +29,7 @@ int yydebug=1;
 %token<str> ASM_CODE
 %token AT_RAM  AT_CODE  AT_FUN AT_END AT_ASM
 %token INT8 BIT
-%type<str_list> codes indep_codes block function_block single_code
+%type<str_list> codes indep_codes block function_block call_function single_code
 %type<str_list> if_statement partener_block
 %type<str_list> while_statement defination_code identifiers 
 %type<str_list> normal_block asm_block codes_in_block
@@ -52,7 +52,8 @@ finally : codes
 
 		outfile.close();
 	}
-	| {}
+	| 
+	{}
 	;
 
 codes	: codes indep_codes
@@ -70,7 +71,22 @@ codes	: codes indep_codes
 		$$ = $1;
                 $$.insert($$.end(), $2.begin(), $2.end());
 	}
-	| {}
+	|
+	{}
+	;
+
+call_function : IDENTIFIER '(' identifiers ')' ';'
+	{
+		string code;
+		PUSH_BACK($$, M_CALL_FUNC($1), code);
+		//ignore all parameters
+	}
+	| IDENTIFIER '(' ')' ';'
+        {
+                string code;
+                PUSH_BACK($$, M_CALL_FUNC($1), code);
+                //ignore all parameters
+        }
 	;
 
 indep_codes : indep_codes single_code
@@ -231,6 +247,10 @@ single_code : defination_code
 	{
 		$$ = $1;
 	}
+	| call_function
+	{
+		$$ = $1;
+	}
 	| error ';'
 	{
 	}
@@ -377,7 +397,8 @@ codes_in_block   : codes_in_block single_code
 	{
 		$$ = $1;
 	}
-	| {}
+	| 
+	{}
 
 asm_block: AT_ASM '{' asm_codes '}'
 	{
@@ -399,7 +420,8 @@ asm_codes : asm_codes ASM_CODE
 		string code = "";
                 PUSH_BACK($$,M_ASM_CODE($1),code);
 	}
-	| {}
+	| 
+	{}
 	| error '\n'
 	{
 	}

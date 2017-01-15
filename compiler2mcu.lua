@@ -49,9 +49,6 @@ function scan_new_vars(codes)
 		end
 
 		ret, msg = loaded()
-		if(nil == ret) then
-			log(msg)
-		end
 
 		if("code" == ret) then
 			if(type(msg) == "table") then

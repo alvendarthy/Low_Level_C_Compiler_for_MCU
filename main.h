@@ -48,10 +48,12 @@
 
 #define S_NEW_FUNC_BGN "util.code_func_bgn"
 #define S_NEW_FUNC_END "util.code_func_end"
+#define S_CALL_FUNC "util.code_call_func"
 #define M_NEW_INT8(name) (S_NEW_VAR "(" + int2string(yylineno) + ",\"" S_INT8 "\",\"" + (name) + "\")")
 #define M_NEW_BIT(name,src) (S_NEW_VAR "(" + int2string(yylineno) + ",\"" S_BIT "\",\"" + (name) + "\", \"" + src+ "\")")
 #define M_NEW_FUNC_BGN(name) (S_NEW_FUNC_BGN "(" + int2string(yylineno) + ",\"" + (name) + "\")")
 #define M_NEW_FUNC_END(name) (S_NEW_FUNC_END "(" + int2string(yylineno) + ",\"" + (name) + "\")")
+#define M_CALL_FUNC(name) (S_CALL_FUNC "(" + int2string(yylineno) + ",\"" + (name) + "\")")
 
 #define S_MATH "util.code_math"
 #define M_MATH(line) (S_MATH "(" + int2string(yylineno) + ",\"" + line + "\")")
