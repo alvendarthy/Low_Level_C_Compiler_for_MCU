@@ -14,6 +14,7 @@ extern "C"
 	extern int yylineno;
 }
 
+string in_file;
 string out_file = "a.out";
 
 int yydebug=1;
@@ -40,17 +41,22 @@ int yydebug=1;
 
 finally : codes
 	{
-		ofstream outfile("a.out");
-		if(!outfile){
-			cout << "cannot open outfile: " << out_file << endl;
-		} else {
+		const char * ofile = out_file.c_str();
+		if(ofile) {
+			ofstream outfile(out_file.c_str());
+			if(!outfile){
+				cout << "cannot open outfile: " << out_file << endl;
+			} else {
 	
-		for(T_str_list_iter iter = $1.begin();iter != $1.end(); iter ++){
-			outfile << *iter << endl;
-		}
-		}
+				for(T_str_list_iter iter = $1.begin();iter != $1.end(); iter ++){
+					outfile << *iter << endl;
+				}
+			}
 
-		outfile.close();
+			outfile.close();
+		} else {
+			cout << "cannot create mcu file: " << out_file << endl;
+		}
 	}
 	| 
 	{}
@@ -438,9 +444,17 @@ void yyerror(const char *s)
 	cerr<< "line: " << yylineno <<". ERR: "<< s  << ". before \"" << yytext << "\"." << endl;
 }
 
-int main()
+int main(int args, char *vargs[])
 {
-	const char* sFile="file.txt";
+	if(args != 3){
+		cout << "usage: in.c out.mcu" << endl;
+		return -1;
+	}
+
+	in_file = vargs[1];
+	out_file = vargs[2];
+
+	const char* sFile=in_file.c_str();
 	FILE* fp=fopen(sFile, "r");
 	if(fp==NULL)
 	{

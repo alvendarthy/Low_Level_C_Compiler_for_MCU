@@ -1,2 +1,2 @@
-./main
-lua compiler2mcu.lua
+./main $1 a.out
+lua compiler2mcu.lua a.out a.mcu a.vars.lua

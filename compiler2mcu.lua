@@ -1,9 +1,19 @@
 util = require "util.util"
 serialize = require "util.serialize"
 
-log = print
-src_name = "a.out"
-out_name = "a.o"
+if(#arg ~= 3) then
+	print([[
+usage: 
+	lua script.lua in out var_tabel_file]])
+	return
+end
+
+
+
+local log = print
+local src_name = arg[1]
+local out_name = arg[2]
+local var_tab_file = arg[3]
 
 local codes = {}
 
@@ -18,6 +28,14 @@ if(err) then
         log("cannot open " .. out_name .. ": " .. err)
         return
 end
+
+local var_tab_f = io.open(var_tab_file, "w")
+if(err) then
+        log("cannot open " .. out_name .. ": " .. err)
+        return
+end
+
+
 
 function load_src_file(file, tab)
 	local code
@@ -35,7 +53,7 @@ function cat_codes(tab)
 	end
 end
 
-function scan_new_vars(codes)
+function compile_job(codes)
 	local linenum, code
 	local pos
 	local loaded
@@ -80,12 +98,22 @@ function show_all_vars()
 	end
 end
 
-
 load_src_file(src_f, codes)
-scan_new_vars(codes)
+compile_job(codes)
 
 local vars = util.get_var_map()
-print(serialize(vars))
+local serialized_var_tab = serialize(vars)
 
+if(nil == serialized_var_tab) then
+	print("serialize var tab failed.")
+	var_tab_f:close()
+	src_f:close()
+	out_f:close()
+	return
+end
+
+var_tab_f:write(serialized_var_tab)
+
+var_tab_f:close()
 src_f:close()
 out_f:close()
