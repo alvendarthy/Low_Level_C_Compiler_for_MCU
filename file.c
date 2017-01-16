@@ -1,10 +1,19 @@
+#define CALL(name) name()
+
+@code 0x16
+int8 a,b,c,d,e,f,g;
+bit C = a_b2;
+
+
 @code 0x08
 
 goto START;
 
-@ram 0x08
-int8 a, b, c;
 bit A1 = a_b1;
+
+if(C == 1){
+	C = 0;
+}
 
 if( A1 > 1)
 	a = A1 + c;
@@ -33,3 +42,4 @@ while(1){
 }
 
 afunc();
+CALL(afunc);
