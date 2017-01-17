@@ -1,4 +1,4 @@
-local frame = require "mcu.framework"
+local frame = require "mcu.frame.framework"
 
 local M = {}
 M = frame
