@@ -112,7 +112,7 @@ function T.code_break(lineno)
 		return nil, "line: " .. lineno .. ". wrong break exp, should be in loop expressions."
 	end
 
-	return "code", "mcu.code_goto(LABEL_" .. id .. "_END)"
+	return "code", "mcu.code_goto(\"LABEL_" .. id .. "_END\")"
 end
 
 function T.code_continue(lineno)
@@ -121,7 +121,7 @@ function T.code_continue(lineno)
 		return nil, "line: " .. lineno .. ". wrong continue exp, should be in loop expressions."
 	end
 
-	return "code", "mcu.code_goto(LABEL_" .. id .. "_TRUE_BGN)"
+	return "code", "mcu.code_goto(\"LABEL_" .. id .. "_TRUE_BGN\")"
 end
 
 function T.code_label(lineno,label)
@@ -139,7 +139,7 @@ function T.code_label(lineno,label)
 	end
 	-- else normal label
 
-	return "code", "mcu.code_label(" .. label .. ")"
+	return "code", "mcu.code_label(\"" .. label .. "\")"
 end
 
 function is_number_str(str)
