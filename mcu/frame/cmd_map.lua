@@ -1,3 +1,2 @@
 return {
-	["GOTO"]="BEUBEY"
 }
