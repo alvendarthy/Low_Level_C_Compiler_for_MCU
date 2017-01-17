@@ -4,10 +4,9 @@ local cmp_method = require "mcu.frame.cmp_method"
 
 local F = {}
 
-F.cmd = {
-}
+F.cmd_map = {}
 
-F.cmp_method = cmp_method
+F.cmp_method = {}
 
 function F.get_var_type(var)
 	if(var == "")then
@@ -27,7 +26,7 @@ function F.get_var_type(var)
 end
 
 function F.normal_cmd(cmd, arg1, arg2)
-	cmd = F.cmd[cmd] or cmd
+	cmd = F.cmd_map[cmd] or cmd
 	if(nil == arg1) then
 		return string.format("\t%-16s %-16s %-16s", cmd, "","")
 	elseif(nil == arg2)then
@@ -46,7 +45,6 @@ function F.code_label(lab)
 end
 
 function F.code_goto(addr)
-	local cmd = F.cmd["GOTO"] or "GOTO"
 	local line = F.normal_cmd("GOTO", addr)
 	return "code", line
 end
@@ -60,19 +58,16 @@ function F.code_func_end(addr)
 end
 
 function F.call_func(name)
-	local cmd = F.cmd["CALL"] or "CALL"
 	local line = F.normal_cmd("CALL", F.get_function_label(name))
         return "code", line
 end
 
 function F.code_return(arg)
-	local cmd = F.cmd["RETURN"] or "RETURN"
 	local line = F.normal_cmd("RETURN")
         return "code", line
 end
 
 function F.code_code_at(addr)
-	local cmd = F.cmd["ORG"] or "ORG"
 	local line = F.normal_cmd("ORG", addr)
         return "code", line
 end
