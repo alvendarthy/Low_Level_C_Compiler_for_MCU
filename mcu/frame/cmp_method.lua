@@ -26,9 +26,40 @@ function cmp_d(arg1, arg2, t, f)
         return nil
 end
 
+function cmp_int8_eq_int8(arg1, arg2, t, f)
+
+	local line
+
+	if(nil == t) then
+		return string.format("%s\n%s\n%s\n%s", normal_cmd("RTOA", arg1), normal_cmd("RSUBA", arg2, "A"), normal_cmd("JUMPIFST", "C"), normal_cmd("GOTO", f))
+	end
+
+	if(nil == f)then
+		return cmp_int8_ne_int8(arg1,arg2, f, t)
+	end
+	
+	return string.format("%s\n%s\n%s\n%s\n%s", normal_cmd("RTOA", arg1), normal_cmd("RSUBA", arg2, "A"), normal_cmd("JUMPIFST", "C"), normal_cmd("GOTO", f), normal_cmd("GOTO", t))
+end
+
+function cmp_int8_ne_int8(arg1,arg2, t, f)
+        local line 
+        
+        if(nil == t) then
+                return string.format("%s\n%s\n%s", normal_cmd("RTOA", arg1), normal_cmd("RSUBA", arg2, "A"), normal_cmd("JUMPIFUST", "C"), normal_cmd("GOTO", f))
+        end
+
+        if(nil == f)then
+                return cmp_int8_eq_int8(arg1,arg2, f, t)
+        end
+        
+        return string.format("%s\n%s\n%s", normal_cmd("RTOA", arg1), normal_cmd("RSUBA", arg2, "A"), normal_cmd("JUMPIFUST", "C"), normal_cmd("GOTO", f), normal_cmd("GOTO", t))
+end
+
 
 local M  = {
-	["imd"] = cmp_d
+	["imd"] = cmp_d,
+	["int8==int8"] = cmp_int8_eq_int8,
+	["int8!=int8"] = cmp_int8_ne_int8
 }
 
 local T = {}

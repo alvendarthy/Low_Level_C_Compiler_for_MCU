@@ -72,6 +72,11 @@ function F.code_code_at(addr)
         return "code", line
 end
 
+function F.code_asm_code(code)
+        return "code", code
+end
+
+
 function F.code_jmp(exp, t, f)
 	local arg1, op, arg2 = string.match(exp, "([%w%d_]+)([%W]*)([%w%d_]*)")
 
@@ -96,7 +101,6 @@ function F.code_jmp(exp, t, f)
 	if(method == nil)then
 		return nil, "bad exp: " .. index
 	end
-
 
 	local line = method(arg1, arg2, t, f)
 	if(line) then
