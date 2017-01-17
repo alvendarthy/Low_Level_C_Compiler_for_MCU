@@ -1,22 +1,13 @@
-util = require "util.util"
+local util = require "util.util"
+
+local cmp_method = require "mcu.frame.cmp_method"
 
 local F = {}
 
 F.cmd = {
 }
 
-function cmp_d(arg1, arg2, t, f)
-	if(t and arg1 ~= "0") then
-		return F.normal_cmd("GOTO", t)
-	end
-
-	if(f and arg1 == "0") then
-		return F.normal_cmd("GOTO", f)
-	end
-
-	return nil
-end
-
+F.cmp_method = cmp_method
 
 function F.get_var_type(var)
 	if(var == "")then
@@ -24,7 +15,7 @@ function F.get_var_type(var)
 	end
 
 	if(util.is_number_str(var))then
-		return "IMD"
+		return "imd"
 	end
 
 	local info  = F.var[var]
@@ -34,19 +25,6 @@ function F.get_var_type(var)
 
 	return info.type
 end
-
-F.cmp_method = {
-	["INT8==INT8"] = cmp_i_eq_i,
-	["IMD"] = cmp_d
---[[	["IMD==INT8"] = cmp_deqi,
-	["INT8==IMD"] = cmp_ieqd,
-	["INT8~=INT8"] = cmp_ne,
-	["INT8>INT8"] =  cmp_gt,
-	["INT8>=INT8"] = cmp_ge,
-	["INT8<INT8"] = cmp_lt,
-	["INT8<=INT8"] = cmp_le,
-	["IMD"] = cmp_imd ]]--
-}
 
 function F.normal_cmd(cmd, arg1, arg2)
 	cmd = F.cmd[cmd] or cmd
