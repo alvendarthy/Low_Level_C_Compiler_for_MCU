@@ -237,11 +237,11 @@ function cmp_bit_ne_imd(arg1,arg2, t, f)
 end
 
 function cmp_imd_eq_bit(arg1,arg2, t, f)
-	return cmp_imd_ne_bit(arg2,arg1, t, f)
+	return cmp_bit_eq_imd(arg2,arg1, t, f)
 end
 
 function cmp_imd_ne_bit(arg1,arg2, t, f)
-	return cmp_imd_ne_bit(arg2,arg1, t, f)
+	return cmp_bit_ne_imd(arg2,arg1, t, f)
 end
 
 
