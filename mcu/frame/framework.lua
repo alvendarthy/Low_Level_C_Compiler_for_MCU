@@ -1,6 +1,7 @@
 local util = require "util.util"
 
 local cmp_method = require "mcu.frame.cmp_method"
+local math_method = require "mcu.frame.math_method"
 
 local F = {}
 
@@ -111,6 +112,49 @@ function F.code_jmp(exp, t, f)
 
 	return nil, "bad code"
 end
+
+function F.code_math(exp)
+	local tar, eq, arg1, op, arg2 = string.match(exp, "([%w%d_]+)([%W]*)([%w%d_]*)([%W]*)([%w%d_]*)")
+
+	tar = tar or ""
+	eq = eq or ""
+	arg1 = arg1 or ""
+	op = op or ""
+	arg2 = arg2 or ""
+
+	local tyt, msg = F.get_var_type(tar)
+	if(nil == tyt)then
+		return nil, msg
+	end
+
+	local ty1, msg = F.get_var_type(arg1)
+	if(nil == ty1)then
+		return nil, msg
+	end
+
+	local ty2, msg = F.get_var_type(arg2)
+        if(nil == ty2)then 
+                return nil, msg
+        end
+
+	local index = tyt .. eq .. ty1 .. op .. ty2
+
+	local method = F.math_method[index]
+
+	if(method == nil)then
+		return nil, "bad exp: " .. index
+	end
+
+	local line = method(tar, arg1, arg2)
+	if(line) then
+		return "code", line
+	else
+		return "ok"
+	end
+
+	return nil, "bad code"
+end
+
 
 
 --[[

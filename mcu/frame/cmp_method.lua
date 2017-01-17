@@ -192,6 +192,10 @@ function cmp_int8_le_int8(arg1,arg2, t, f)
         return string.format("%s\n%s\n%s\n%s\n%s", normal_cmd("RTOA", arg1), normal_cmd("RSUBA", arg2, "A"), normal_cmd("JMPIFUST", "C"), normal_cmd("GOTO", f), normal_cmd("GOTO", t))
 end
 
+function cmp_int8_ge_int8(arg1,arg2, t, f)
+	return cmp_int8_le_int8(arg2,arg1, t, f)
+end
+
 function cmp_int8_lt_int8(arg1,arg2, t, f)
 	return cmp_int8_gt_int8(arg2,arg1, t, f)
 end
