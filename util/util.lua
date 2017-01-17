@@ -142,6 +142,7 @@ function T.code_label(lineno,label)
 	return "code", "mcu.code_label(\"" .. label .. "\")"
 end
 
+
 function is_number_str(str)
 	if string.match(str, "^%d+$") then 
 		return true
@@ -149,6 +150,8 @@ function is_number_str(str)
 		return false
 	end
 end
+
+T.is_number_str = is_number_str
 
 local push_code = table.insert
 

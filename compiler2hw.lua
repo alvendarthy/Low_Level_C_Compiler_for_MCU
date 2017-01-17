@@ -104,7 +104,7 @@ function show_all_vars()
 	end
 end
 
-mcu = mcu_factory:get()
+mcu = mcu_factory:get(var_map)
 
 load_src_file(src_f, codes)
 compile_job(codes)
