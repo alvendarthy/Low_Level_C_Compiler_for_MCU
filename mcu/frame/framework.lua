@@ -73,7 +73,7 @@ function F.code_code_at(addr)
 end
 
 function F.code_asm_code(code)
-        return "code", code
+        return "code", F.normal_cmd(code)
 end
 
 
