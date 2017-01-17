@@ -19,6 +19,10 @@ end
 
 
 function F.get_var_type(var)
+	if(var == "")then
+		return ""
+	end
+
 	if(util.is_number_str(var))then
 		return "IMD"
 	end
@@ -97,22 +101,38 @@ end
 
 function F.code_jmp(exp, t, f)
 	local arg1, op, arg2 = string.match(exp, "([%w%d_]+)([%W]*)([%w%d_]*)")
-	if(op .. arg2 == "")then
-		local ty, msg = F.get_var_type(arg1)
-		if(nil == ty)then
-			return nil, msg
-		end
-		local line = F.cmp_method[ty](arg1, arg2, t, f)
-		if(line) then
-			return "code", line
-		else
-			return "ok"
-		end
 
-		return nil, "bad code"
+	arg1 = arg1 or ""
+	arg2 = arg2 or ""
+	op = op or ""
+
+	local ty1, msg = F.get_var_type(arg1)
+	if(nil == ty1)then
+		return nil, msg
 	end
-	
-	return "ok"
+
+	local ty2, msg = F.get_var_type(arg2)
+        if(nil == ty2)then 
+                return nil, msg
+        end
+
+	local index = ty1 .. op .. ty2
+
+	local method = F.cmp_method[index]
+
+	if(method == nil)then
+		return nil, "bad exp: " .. index
+	end
+
+
+	local line = method(arg1, arg2, t, f)
+	if(line) then
+		return "code", line
+	else
+		return "ok"
+	end
+
+	return nil, "bad code"
 end
 
 
