@@ -5,8 +5,13 @@ local math_method = require "mcu.frame.math_method"
 
 local F = {}
 
-function normal_cmd(cmd, arg1, arg2)
-        cmd = F.cmd_map[cmd] or cmd
+function normal_cmd(cmd_orig, arg1, arg2)
+	cmd = F.cmd_map[cmd_orig] or cmd_orig
+
+	if(type(cmd) == "function")then
+                cmd, arg1, arg2 = cmd(cmd_orig, arg1, arg2)
+        end
+
         if(nil == arg1) then
                 return string.format("\t%-16s %-16s %-16s", cmd, "","")
         elseif(nil == arg2)then
@@ -118,6 +123,10 @@ end
 
 function F.code_cleardog()
 	return "code", F.normal_cmd("CLRWDT")
+end
+
+function F.code_nop()
+	return "code", F.normal_cmd("NOP")
 end
 
 function F.code_math(exp)

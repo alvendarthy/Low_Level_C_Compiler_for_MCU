@@ -285,6 +285,10 @@ function T.code_cleardog(lineno)
 	return "code", "mcu.code_cleardog()"
 end
 
+function T.code_nop(lineno)
+	return "code", "mcu.code_nop()"
+end
+
 function T.code_return(lineno,name)
 	if(function_in <= 0 ) then
 		return nil, "line: " .. lineno .. ". return should be in function blocks."

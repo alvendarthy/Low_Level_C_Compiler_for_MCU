@@ -21,7 +21,7 @@ int yydebug=1;
 
 %}
 %token IF ELSE ELSIF DO WHILE BREAK CONTINUE GOTO RETURN
-%token AND OR GT LT GE LE EQ NE CLRWDT
+%token AND OR GT LT GE LE EQ NE CLRWDT NOP
 %token<str> CMP
 %token<str> LOGICAL_CHAR CALC_CHAR SELF_CALC
 %token SHL RSHL SHR RSHR
@@ -267,6 +267,11 @@ single_code : defination_code
 	{
 		string code;
 		PUSH_BACK($$, M_CLRDOG(), code);
+	}
+	| NOP ';'
+	{
+		string code;
+                PUSH_BACK($$, M_NOP(), code);
 	}
 	| error ';'
 	{

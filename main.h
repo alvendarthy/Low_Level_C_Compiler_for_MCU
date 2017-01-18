@@ -28,6 +28,7 @@
 #define M_CODE_AT(addr) "util.code_code_at(" + int2string(yylineno) + "," + addr + ")"
 #define M_RAM_AT(addr) "util.code_ram_at(" + int2string(yylineno) + "," + addr + ")"
 #define M_CLRDOG() "util.code_cleardog(" + int2string(yylineno) + ")"
+#define M_NOP() "util.code_nop(" + int2string(yylineno) + ")"
 
 
 #define S_LABEL_HEAD "LABEL_"

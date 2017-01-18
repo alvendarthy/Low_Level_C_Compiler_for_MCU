@@ -61,7 +61,8 @@ blank_chars	([ \f\r\t\v])
 		yylval.str = yytext;
                 return ASM_CODE;
         }
-<ASM>\n {}
+
+<ASM>[\n\r] {}
 
 <ASM>"}" {
                 BEGIN INITIAL;
@@ -112,6 +113,9 @@ blank_chars	([ \f\r\t\v])
 
 "cleardog" {
 		return CLRWDT;
+	}
+"nop" {
+		return NOP;
 	}
 
 (\+\+)|(\-\-) {
