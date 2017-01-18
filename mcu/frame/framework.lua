@@ -5,6 +5,20 @@ local math_method = require "mcu.frame.math_method"
 
 local F = {}
 
+function normal_cmd(cmd, arg1, arg2)
+        cmd = F.cmd_map[cmd] or cmd
+        if(nil == arg1) then
+                return string.format("\t%-16s %-16s %-16s", cmd, "","")
+        elseif(nil == arg2)then
+                return string.format("\t%-16s %-16s %-16s", cmd, arg1,"")
+        else
+                return string.format("\t%-16s %-16s %-16s", cmd, arg1 .. ",",arg2)
+        end
+end
+
+
+F.normal_cmd = normal_cmd
+
 F.cmd_map = {}
 
 F.cmp_method = {}
@@ -24,17 +38,6 @@ function F.get_var_type(var)
 	end
 
 	return info.type
-end
-
-function F.normal_cmd(cmd, arg1, arg2)
-	cmd = F.cmd_map[cmd] or cmd
-	if(nil == arg1) then
-		return string.format("\t%-16s %-16s %-16s", cmd, "","")
-	elseif(nil == arg2)then
-		return string.format("\t%-16s %-16s %-16s", cmd, arg1,"")
-	else
-		return string.format("\t%-16s %-16s %-16s", cmd, arg1 .. ",",arg2)
-	end
 end
 
 function F.get_function_label(name)

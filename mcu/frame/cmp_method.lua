@@ -1,4 +1,3 @@
-
 local cmd_map = {}
 
 function normal_cmd(cmd, arg1, arg2)
@@ -153,15 +152,15 @@ function cmp_int8_gt_imd(arg1, arg2, t, f)
 end
 
 function cmp_int8_lt_imd(arg1, arg2, t, f)
-	return cmp_imd_gt_int8(arg1, arg2, t, f)
+	return cmp_imd_gt_int8(arg2, arg1, t, f)
 end
 
 function cmp_int8_ge_imd(arg1, arg2, t, f)
-	return cmp_imd_le_int8(arg1, arg2, t, f)
+	return cmp_imd_le_int8(arg2, arg1, t, f)
 end
 
 function cmp_int8_le_imd(arg1, arg2, t, f)
-	return cmp_imd_ge_int8(arg1, arg2, t, f)
+	return cmp_imd_ge_int8(arg2, arg1, t, f)
 end
 
 function cmp_int8_gt_int8(arg1,arg2, t, f)

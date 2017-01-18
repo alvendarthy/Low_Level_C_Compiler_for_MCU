@@ -13,6 +13,7 @@ function normal_cmd(cmd, arg1, arg2)
 end
 
 
+
 function math_int8_int8_add_int8(tar, arg1, arg2)
 	return string.format("%s\n%s\n%s",
 			normal_cmd("RTOA", arg2), 
@@ -78,6 +79,14 @@ function math_int8_decr(tar, arg1, arg2)
 	return normal_cmd("RDECR", tar)
 end
 
+function math_bit_eq_imd(tar, arg1, arg2)
+	if(arg1 == "0") then
+		return normal_cmd("BCLRR", tar)
+	end
+
+	return normal_cmd("BSTR", tar)
+end
+
 local M = {
 	["int8=int8+int8"] = math_int8_int8_add_int8,
 	["int8=int8-int8"] = math_int8_int8_sub_int8,
@@ -87,6 +96,7 @@ local M = {
 	["int8=imd-int8"] = math_int8_imd_sub_int8,
 	["int8=imd"] = math_int8_eq_imd,
 	["int8=int8"] = math_int8_eq_int8,
+	["bit=imd"] = math_bit_eq_imd,
 	["int8++"] = math_int8_incr,
 	["int8--"] = math_int8_decr
 }

@@ -67,7 +67,7 @@ function T.code_new_var(lineno, ty, name, src)
 
 		var_map[name] = {}
 		var_map[name]["type"] = src_var.type
-		var_map[name]["name"] = src
+		var_map[name]["name"] = name
 		var_map[name]["addr"] = src_var.addr
 		var_map[name]["bitaddr"] = src_var.bitaddr
 	else

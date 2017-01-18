@@ -119,8 +119,8 @@ mcu = mcu_factory:get(var_map)
 load_src_file(src_f, codes)
 
 all_var_defs(out_f, var_map)
+--show_all_vars()
 
 compile_job(codes)
---show_all_vars()
 src_f:close()
 out_f:close()
