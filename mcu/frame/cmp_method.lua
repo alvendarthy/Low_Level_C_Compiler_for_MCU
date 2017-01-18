@@ -234,7 +234,7 @@ function cmp_bit_ne_imd(arg1,arg2, t, f)
         end
         
         if(nil == f)then
-                return cmp_bit_ne_imd(arg2,arg1, f, t)
+                return cmp_bit_ne_imd(arg1,arg2, f, t)
         end
 
         if("0" == arg2)then
