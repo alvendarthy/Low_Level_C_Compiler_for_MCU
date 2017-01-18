@@ -281,6 +281,10 @@ function T.code_func_end(lineno,name)
 	return "code", "mcu.code_func_end(\"" .. name .. "\")"
 end
 
+function T.code_cleardog(lineno)
+	return "code", "mcu.code_cleardog()"
+end
+
 function T.code_return(lineno,name)
 	if(function_in <= 0 ) then
 		return nil, "line: " .. lineno .. ". return should be in function blocks."

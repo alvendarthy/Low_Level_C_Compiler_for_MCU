@@ -110,6 +110,10 @@ blank_chars	([ \f\r\t\v])
 		return GOTO;
 	}
 
+"cleardog" {
+		return CLRWDT;
+	}
+
 (\+\+)|(\-\-) {
 		yylval.str=yytext;
 		return SELF_CALC;

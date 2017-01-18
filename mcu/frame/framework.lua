@@ -116,6 +116,10 @@ function F.code_jmp(exp, t, f)
 	return nil, "bad code"
 end
 
+function F.code_cleardog()
+	return "code", F.normal_cmd("CLRWDT")
+end
+
 function F.code_math(exp)
 	local tar, eq, arg1, op, arg2 = string.match(exp, "([%w%d_]+)([%W]*)([%w%d_]*)([%W]*)([%w%d_]*)")
 
