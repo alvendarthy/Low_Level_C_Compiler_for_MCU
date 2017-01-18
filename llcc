@@ -1,4 +1,4 @@
 gcc -E -P $1 -o a.ex
 ./lexparser a.ex a.out
 lua compiler2mcu.lua a.out a.mcu a_vars.lua
-lua compiler2hw.lua mcu.s53 a_vars a.mcu a.hw
+lua compiler2hw.lua mcu.hc a_vars a.mcu a.hw

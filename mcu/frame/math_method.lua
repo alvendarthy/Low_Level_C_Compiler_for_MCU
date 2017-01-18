@@ -67,7 +67,7 @@ function math_int8_eq_imd(tar, arg1, arg2)
 	end
 
 	return string.format("%s\n%s",
-                        normal_cmd("RTOA", arg1),
+                        normal_cmd("ITOA", arg1),
                         normal_cmd("ATOR", tar))
 end
 
