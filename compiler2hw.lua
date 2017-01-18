@@ -104,9 +104,22 @@ function show_all_vars()
 	end
 end
 
+function all_var_defs(f, vars)
+	for var_name, info in pairs (vars) do
+		if(info.type == "int8")then
+			f:write(info.name .. " EQ " .. info.addr .. "\n")
+		elseif (info.type == "bit") then
+			f:write("#define " .. info.name .. " " .. info.addr .. ", " .. info.bitaddr .. "\n")
+		end
+        end
+end
+
 mcu = mcu_factory:get(var_map)
 
 load_src_file(src_f, codes)
+
+all_var_defs(out_f, var_map)
+
 compile_job(codes)
 --show_all_vars()
 src_f:close()

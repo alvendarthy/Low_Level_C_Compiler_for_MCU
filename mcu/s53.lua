@@ -1,5 +1,5 @@
 local frame = require "mcu.frame.framework"
-local cmd_map = require "mcu.frame.cmd_map"
+local cmd_map = require "mcu.s53.cmd_map"
 local cmp_method = require "mcu.frame.cmp_method"
 local math_method = require "mcu.frame.math_method"
 

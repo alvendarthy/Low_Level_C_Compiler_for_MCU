@@ -332,6 +332,10 @@ calc_statement : IDENTIFIER '=' IDENTIFIER CALC_CHAR IDENTIFIER ';'
         {
                 $$ = $1 + "=" + $3;
         }
+	| IDENTIFIER '=' IDENTIFIER ';'
+        {
+                $$ = $1 + "=" + $3;
+        }
 	;
 
 self_calc : IDENTIFIER SELF_CALC ';'
