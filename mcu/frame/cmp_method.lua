@@ -227,9 +227,9 @@ end
 function cmp_bit_ne_imd(arg1,arg2, t, f)
         if(nil == t)then
                 if("0" == arg2)then
-                        return string.format("%s\n%s", normal_cmd("JMPIFST", arg1), normal_cmd("GOTO", f))
-                else
                         return string.format("%s\n%s", normal_cmd("JMPIFUST", arg1), normal_cmd("GOTO", f))
+                else
+                        return string.format("%s\n%s", normal_cmd("JMPIFST", arg1), normal_cmd("GOTO", f))
                 end
         end
         
@@ -238,9 +238,9 @@ function cmp_bit_ne_imd(arg1,arg2, t, f)
         end
 
         if("0" == arg2)then
-                return string.format("%s\n%s\n%s", normal_cmd("JMPIFST", "C"), normal_cmd("GOTO", f), normal_cmd("GOTO", t))
-        else
                 return string.format("%s\n%s\n%s", normal_cmd("JMPIFUST", "C"), normal_cmd("GOTO", f), normal_cmd("GOTO", t))
+        else
+                return string.format("%s\n%s\n%s", normal_cmd("JMPIFST", "C"), normal_cmd("GOTO", f), normal_cmd("GOTO", t))
         end
 end
 

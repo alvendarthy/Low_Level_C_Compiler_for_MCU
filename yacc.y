@@ -21,7 +21,7 @@ int yydebug=1;
 
 %}
 %token IF ELSE ELSIF DO WHILE BREAK CONTINUE GOTO RETURN
-%token AND OR GT LT GE LE EQ NE CLRWDT NOP
+%token AND OR GT LT GE LE EQ NE CLRWDT NOP ADD_SELF SUB_SELF
 %token<str> CMP
 %token<str> LOGICAL_CHAR CALC_CHAR SELF_CALC
 %token SHL RSHL SHR RSHR
@@ -273,6 +273,9 @@ single_code : defination_code
 		string code;
                 PUSH_BACK($$, M_NOP(), code);
 	}
+	| ';'
+	{
+	}
 	| error ';'
 	{
 	}
@@ -346,6 +349,22 @@ calc_statement : IDENTIFIER '=' IDENTIFIER CALC_CHAR IDENTIFIER ';'
         {
                 $$ = $1 + "=" + $3;
         }
+	| IDENTIFIER ADD_SELF IDENTIFIER ';'
+	{
+		$$ = $1 + "+=" + $3;
+	}
+	| IDENTIFIER ADD_SELF INTEGER ';'
+	{
+		$$ = $1 + "+=" + $3;
+	}
+	| IDENTIFIER SUB_SELF IDENTIFIER ';'
+	{
+		$$ = $1 + "-=" + $3;
+	}
+	| IDENTIFIER SUB_SELF INTEGER ';'
+	{
+		$$ = $1 + "-=" + $3;
+	}
 	;
 
 self_calc : IDENTIFIER SELF_CALC ';'

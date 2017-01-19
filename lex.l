@@ -103,6 +103,14 @@ blank_chars	([ \f\r\t\v])
                 return BREAK;
         }
 
+"+=" {
+		return ADD_SELF;
+	}
+
+"-=" {
+		return SUB_SELF;
+	}
+
 "continue" {
                 return CONTINUE;
         }

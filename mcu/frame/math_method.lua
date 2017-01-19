@@ -60,7 +60,7 @@ end
 
 function math_int8_eq_int8(tar, arg1, arg2)
 	return string.format("%s\n%s",
-                        normal_cmd("ITOA", arg1),
+                        normal_cmd("RTOA", arg1),
                         normal_cmd("ATOR", tar))
 end
 
@@ -75,6 +75,41 @@ function math_int8_eq_imd(tar, arg1, arg2)
                         normal_cmd("ITOA", arg1),
                         normal_cmd("ATOR", tar))
 end
+
+function math_int8_add_eq_int8(tar, arg1, arg2)
+	return string.format("%s\n%s",
+                        normal_cmd("RTOA", arg1),
+                        normal_cmd("RADDA", tar, "R"))
+end
+
+
+function math_int8_add_eq_imd(tar, arg1, arg2)
+	if(arg1 == "0") then
+                return nil
+        end
+
+	return string.format("%s\n%s",
+                        normal_cmd("ITOA", arg1),
+                        normal_cmd("RADDA", tar, "R"))
+end
+
+function math_int8_sub_eq_int8(tar, arg1, arg2)
+	return string.format("%s\n%s",
+                        normal_cmd("RTOA", arg1),
+                        normal_cmd("RADDA", tar, "R"))
+end
+
+
+function math_int8_sub_eq_imd(tar, arg1, arg2)
+	if(arg1 == "0") then
+                return nil
+        end
+
+	return string.format("%s\n%s",
+                        normal_cmd("ITOA", arg1),
+                        normal_cmd("RADDA", tar, "R"))
+end
+
 
 function math_int8_incr(tar, arg1, arg2)
 	return normal_cmd("RINCR", tar)
@@ -101,6 +136,10 @@ local M = {
 	["int8=imd-int8"] = math_int8_imd_sub_int8,
 	["int8=imd"] = math_int8_eq_imd,
 	["int8=int8"] = math_int8_eq_int8,
+	["int8+=imd"] = math_int8_add_eq_imd,
+	["int8+=int8"] = math_int8_add_eq_int8,
+	["int8-=imd"] = math_int8_sub_eq_imd,
+	["int8-=int8"] = math_int8_sub_eq_int8,
 	["bit=imd"] = math_bit_eq_imd,
 	["int8++"] = math_int8_incr,
 	["int8--"] = math_int8_decr
