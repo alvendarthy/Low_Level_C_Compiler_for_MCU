@@ -88,6 +88,10 @@ function math_int8_add_eq_imd(tar, arg1, arg2)
                 return nil
         end
 
+	if(arg1 == "1") then
+		return math_int8_incr(tar, arg1, arg2)
+	end
+
 	return string.format("%s\n%s",
                         normal_cmd("ITOA", arg1),
                         normal_cmd("RADDA", tar, "R"))
@@ -105,6 +109,10 @@ function math_int8_sub_eq_imd(tar, arg1, arg2)
                 return nil
         end
 
+	if(arg1 == "1") then
+		return math_int8_decr(tar, arg1, arg2)
+	end
+
 	return string.format("%s\n%s",
                         normal_cmd("ITOA", arg1),
                         normal_cmd("RADDA", tar, "R"))
@@ -112,11 +120,11 @@ end
 
 
 function math_int8_incr(tar, arg1, arg2)
-	return normal_cmd("RINCR", tar)
+	return normal_cmd("RINCR", tar, "R")
 end
 
 function math_int8_decr(tar, arg1, arg2)
-	return normal_cmd("RDECR", tar)
+	return normal_cmd("RDECR", tar, "R")
 end
 
 function math_bit_eq_imd(tar, arg1, arg2)
