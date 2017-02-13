@@ -28,5 +28,7 @@ return {
 	["RADDA"] = "ADDAR",
 	["IADDA"] = "ADDIA",
 	["CLRWDT"] = "CLRWDT",
-	["NOP"] = "NOP"
+	["NOP"] = "NOP",
+	["RRLC"]="RLF",
+	["RRRC"]="RRF"
 }

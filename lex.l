@@ -110,6 +110,21 @@ blank_chars	([ \f\r\t\v])
 "-=" {
 		return SUB_SELF;
 	}
+">>" {
+		return RR;
+}
+
+">>>" {
+		return RRC;
+}
+
+"<<" {
+		return RL;
+}
+
+"<<<" {
+		return RLC;
+}
 
 "continue" {
                 return CONTINUE;

@@ -21,7 +21,7 @@ int yydebug=1;
 
 %}
 %token IF ELSE ELSIF DO WHILE BREAK CONTINUE GOTO RETURN
-%token AND OR GT LT GE LE EQ NE CLRWDT NOP ADD_SELF SUB_SELF
+%token AND OR GT LT GE LE EQ NE CLRWDT NOP ADD_SELF SUB_SELF RL RLC RR RRC
 %token<str> CMP
 %token<str> LOGICAL_CHAR CALC_CHAR SELF_CALC
 %token SHL RSHL SHR RSHR
@@ -364,6 +364,22 @@ calc_statement : IDENTIFIER '=' IDENTIFIER CALC_CHAR IDENTIFIER ';'
 	| IDENTIFIER SUB_SELF INTEGER ';'
 	{
 		$$ = $1 + "-=" + $3;
+	}
+	| IDENTIFIER '=' IDENTIFIER RL INTEGER ';'
+	{
+		$$ = $1 + "=" + $3 + "<<" + $5;
+	}
+	| IDENTIFIER '=' IDENTIFIER RLC INTEGER ';'
+	{
+		$$ = $1 + "=" + $3 + "<<<" + $5;
+	}
+	| IDENTIFIER '=' IDENTIFIER RR INTEGER ';'
+	{
+		$$ = $1 + "=" + $3 + ">>" + $5;
+	}
+	| IDENTIFIER '=' IDENTIFIER RRC INTEGER ';'
+	{
+		$$ = $1 + "=" + $3 + ">>>" + $5;
 	}
 	;
 

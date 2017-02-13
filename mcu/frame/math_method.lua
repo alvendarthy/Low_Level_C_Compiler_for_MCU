@@ -135,6 +135,99 @@ function math_bit_eq_imd(tar, arg1, arg2)
 	return normal_cmd("BSTR", tar)
 end
 
+function math_int8_rr_imd(tar, arg1, arg2)
+	local rn = tonumber(arg2) or 0
+	local line = ""
+
+	if(0 == rn) then
+		return "OK"
+	end
+
+	if(arg1 == tar) then
+		line =  normal_cmd("RRR", arg1, "R")
+
+	else
+		line =  normal_cmd("RRR", arg1, "A")
+		line = line .. "\n" .. normal_cmd("ATOR", tar)
+	end
+
+	for i = 2, rn do
+		line = line  .. "\n" .. normal_cmd("RRR", tar, "R")
+	end
+
+	return line
+end
+
+function math_int8_rrc_imd(tar, arg1, arg2)
+	local rn = tonumber(arg2) or 0
+	local line = ""
+
+	if(0 == rn) then
+		return "OK"
+	end
+
+	if(arg1 == tar) then
+		line =  normal_cmd("RRRC", arg1, "R")
+
+	else
+		line =  normal_cmd("RRRC", arg1, "A")
+		line = line .. "\n" .. normal_cmd("ATOR", tar)
+	end
+
+	for i = 2, rn do
+		line = line  .. "\n" .. normal_cmd("RRRC", tar, "R")
+	end
+
+	return line
+end
+
+function math_int8_rl_imd(tar, arg1, arg2)
+	local rn = tonumber(arg2) or 0
+	local line = ""
+
+	if(0 == rn) then
+		return "OK"
+	end
+
+	if(arg1 == tar) then
+		line =  normal_cmd("RRL", arg1, "R")
+
+	else
+		line =  normal_cmd("RRL", arg1, "A")
+		line = line .. "\n" .. normal_cmd("ATOR", tar)
+	end
+
+	for i = 2, rn do
+		line = line  .. "\n" .. normal_cmd("RRL", tar, "R")
+	end
+
+	return line
+end
+
+function math_int8_rlc_imd(tar, arg1, arg2)
+	local rn = tonumber(arg2) or 0
+	local line = ""
+
+	if(0 == rn) then
+		return "OK"
+	end
+
+	if(arg1 == tar) then
+		line =  normal_cmd("RRLC", arg1, "R")
+
+	else
+		line =  normal_cmd("RRLC", arg1, "A")
+		line = line .. "\n" .. normal_cmd("ATOR", tar)
+	end
+
+	for i = 2, rn do
+		line = line  .. "\n" .. normal_cmd("RRLC", tar, "R")
+	end
+
+	return line
+end
+
+
 local M = {
 	["int8=int8+int8"] = math_int8_int8_add_int8,
 	["int8=int8-int8"] = math_int8_int8_sub_int8,
@@ -150,7 +243,11 @@ local M = {
 	["int8-=int8"] = math_int8_sub_eq_int8,
 	["bit=imd"] = math_bit_eq_imd,
 	["int8++"] = math_int8_incr,
-	["int8--"] = math_int8_decr
+	["int8--"] = math_int8_decr,
+	["int8=int8>>imd"] = math_int8_rr_imd,
+	["int8=int8>>>imd"] = math_int8_rrc_imd,
+	["int8=int8<<imd"] = math_int8_rl_imd,
+	["int8=int8<<<imd"] = math_int8_rlc_imd
 }
 
 function T.get(map)
