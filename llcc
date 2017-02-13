@@ -1,4 +1,14 @@
-gcc -E -P $1 -o a.ex
-./lexparser a.ex a.out
-lua compiler2mcu.lua a.out a.mcu a_vars.lua
-lua compiler2hw.lua mcu.s53 a_vars a.mcu a.hw
+mcu_ty=$1
+source=$2
+file_str=${2%%.*}
+
+if [ ! -f mcu/${mcu_ty}.lua ];
+then
+	echo "unsupported mcu: " $mcu_ty
+	exit 1
+fi
+
+gcc -E -P $source -o ${file_str}.ex
+./lexparser ${file_str}.ex ${file_str}.out
+lua compiler2mcu.lua ${file_str}.out ${file_str}.mcu ${file_str}_vars.lua
+lua compiler2hw.lua mcu.s53 ${file_str}_vars ${file_str}.mcu ${file_str}.hw
