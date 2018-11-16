@@ -6,6 +6,7 @@ FLAGS= -g
 
 $(OBJECT): lex.yy.o  yacc.tab.o set_lable_id.o
 	$(CC) lex.yy.o yacc.tab.o set_lable_id.o -o $(OBJECT)
+	mv $(OBJECT) bin/$(OBJECT)
 
 lex.yy.o: lex.yy.c  yacc.tab.h  main.h
 	$(CC) -c lex.yy.c $(FLAGS)
@@ -24,4 +25,4 @@ lex.yy.c: lex.l
 
 
 clean:
-	@rm -f $(OBJECT)  *.o yacc.tab.c lex.yy.c
+	@rm -f bin/$(OBJECT)  *.o yacc.tab.c lex.yy.c

@@ -1,7 +1,9 @@
 util = require "util.util"
 serialize = require "util.serialize"
 
-if(#arg ~= 4) then
+print(#arg)
+
+if(#arg ~= 3) then
 	print([[
 usage: 
 	lua script.lua in out var_tabel_file]])
@@ -11,10 +13,9 @@ end
 
 
 local log = print
-local src_name = arg[3]
-local out_name = arg[4]
-local var_tab_file = arg[2]
-local mcu_name = arg[1]
+local src_name = arg[1]
+local out_name = arg[2]
+local var_tab_file = arg[3]
 
 local codes = {}
 
@@ -30,17 +31,12 @@ if(err) then
         return
 end
 
-local var_map = require(var_tab_file)
-if(nil == var_map) then
-	log("cannot open vars file.")
-	return
+local var_tab_f = io.open(var_tab_file, "w")
+if(err) then
+        log("cannot open " .. out_name .. ": " .. err)
+        return
 end
 
-local mcu_factory = require(mcu_name)
-if(nil == mcu_factory) then
-	log("cannot open mcu factory.")
-	return
-end
 
 
 function load_src_file(file, tab)
@@ -98,29 +94,28 @@ function compile_job(codes)
 end
 
 function show_all_vars()
-	local vars = var_map
+	local vars = util.get_var_map()
 	for var_name, info in pairs (vars) do
 		print(var_name .. " type: " .. info.type .. " addr: " .. info.addr .. " bit_addr: " .. info.bitaddr)
 	end
 end
 
-function all_var_defs(f, vars)
-	for var_name, info in pairs (vars) do
-		if(info.type == "int8")then
-			f:write(info.name .. " EQ " .. info.addr .. "\n")
-		elseif (info.type == "bit") then
-			f:write("#define " .. info.name .. " " .. info.addr .. ", " .. info.bitaddr .. "\n")
-		end
-        end
+load_src_file(src_f, codes)
+compile_job(codes)
+
+local vars = util.get_var_map()
+local serialized_var_tab = serialize(vars)
+
+if(nil == serialized_var_tab) then
+	print("serialize var tab failed.")
+	var_tab_f:close()
+	src_f:close()
+	out_f:close()
+	return
 end
 
-mcu = mcu_factory:get(var_map)
+var_tab_f:write(serialized_var_tab)
 
-load_src_file(src_f, codes)
-
-all_var_defs(out_f, var_map)
---show_all_vars()
-
-compile_job(codes)
+var_tab_f:close()
 src_f:close()
 out_f:close()
