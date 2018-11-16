@@ -1,7 +1,6 @@
 util = require "util.util"
 serialize = require "util.serialize"
 
-print(arg[0])
 
 if(#arg ~= 4) then
 	print([[

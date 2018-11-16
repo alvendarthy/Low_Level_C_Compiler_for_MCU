@@ -1,8 +1,6 @@
 util = require "util.util"
 serialize = require "util.serialize"
 
-print(#arg)
-
 if(#arg ~= 3) then
 	print([[
 usage: 
